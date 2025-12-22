@@ -14,14 +14,12 @@ const Status: React.FC = () => {
             const pending = tasks.filter(t => t.status === 'pending').length;
             const inProgress = tasks.filter(t => t.status === 'in-progress').length;
             setData({ completed, pending, inProgress });
-
             const pData = [
                 { name: 'High', count: tasks.filter(t => t.priority === 'high').length },
                 { name: 'Medium', count: tasks.filter(t => t.priority === 'medium').length },
                 { name: 'Low', count: tasks.filter(t => t.priority === 'low').length }
             ];
             setPriorityData(pData);
-
             const last7Days = Array.from({ length: 7 }, (_, i) => {
                 const d = new Date();
                 d.setDate(d.getDate() - (6 - i));
@@ -35,7 +33,6 @@ const Status: React.FC = () => {
             setActivityData(activity);
         });
     };
-
     useEffect(() => {
         fetchData();
     }, []);
