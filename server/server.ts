@@ -17,6 +17,7 @@ const allowedOrigins = [
     process.env.CLIENT_ORIGIN,
     'http://localhost:5173',
     'http://localhost:3000',
+    'https://taskify-webapp-pro.vercel.app',
 ].filter(Boolean);
 
 app.use(cors({
