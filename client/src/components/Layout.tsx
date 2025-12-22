@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+// remove it entirely
 import { Menu } from 'lucide-react';
 
 interface LayoutProps {
