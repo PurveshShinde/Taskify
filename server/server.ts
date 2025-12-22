@@ -12,9 +12,22 @@ dotenv.config();
 
 const app = express();
 
-// Allow all origins for easier local development
+// Allow specific origins for production security
+const allowedOrigins = [
+    process.env.CLIENT_ORIGIN,
+    'http://localhost:5173',
+    'http://localhost:3000',
+].filter(Boolean);
+
 app.use(cors({
-    origin: '*',
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true); // allow server-to-server / Postman
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
