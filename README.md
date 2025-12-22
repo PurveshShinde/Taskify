@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Taskify
 ### Smart Task Management Web Application
 
@@ -164,3 +165,6 @@ While the original concept was inspired by the QHackathon event, this codebase r
 **Purvesh Shinde**
 *   Full Stack Developer
 *   Repository Owner
+=======
+
+>>>>>>> 4af2d44a2b899ce386f7ab256f840dfc36d9e694
