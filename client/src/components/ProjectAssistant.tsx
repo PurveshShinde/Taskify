@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, Bot, User } from 'lucide-react';
+import { X, Send, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
@@ -16,7 +16,7 @@ interface ProjectAssistantProps {
 const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-      { id: '1', text: "Hi! I'm your Taskify Assistant. I can help you organize tasks, suggest project structures, or just chat about productivity. How can I help today?", sender: 'bot' }
+    { id: '1', text: "Hi! I'm your Taskify Assistant. I can help you organize tasks, suggest project structures, or just chat about productivity. How can I help today?", sender: 'bot' }
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -34,17 +34,17 @@ const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) 
 
     // Simulate AI delay
     setTimeout(() => {
-        const botResponse = generateResponse(userMsg.text);
-        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: botResponse, sender: 'bot' }]);
+      const botResponse = generateResponse(userMsg.text);
+      setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: botResponse, sender: 'bot' }]);
     }, 1000);
   };
 
   const generateResponse = (text: string): string => {
-      const lower = text.toLowerCase();
-      if(lower.includes('project')) return "To start a new project, define your goals first. I suggest creating a 'Project Initiation' task list including: Scope Definition, Team Selection, and Initial Timeline.";
-      if(lower.includes('task') || lower.includes('todo')) return "Breaking down tasks makes them manageable. Try the SMART criteria: Specific, Measurable, Achievable, Relevant, and Time-bound.";
-      if(lower.includes('hello') || lower.includes('hi')) return "Hello there! Ready to get things done?";
-      return "That's interesting! I recommend checking your Dashboard analytics to see how that fits into your current workflow productivity.";
+    const lower = text.toLowerCase();
+    if (lower.includes('project')) return "To start a new project, define your goals first. I suggest creating a 'Project Initiation' task list including: Scope Definition, Team Selection, and Initial Timeline.";
+    if (lower.includes('task') || lower.includes('todo')) return "Breaking down tasks makes them manageable. Try the SMART criteria: Specific, Measurable, Achievable, Relevant, and Time-bound.";
+    if (lower.includes('hello') || lower.includes('hi')) return "Hello there! Ready to get things done?";
+    return "That's interesting! I recommend checking your Dashboard analytics to see how that fits into your current workflow productivity.";
   };
 
   return (
@@ -71,11 +71,10 @@ const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) 
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-dark-900">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] p-3 rounded-xl text-sm ${
-                    msg.sender === 'user' 
-                    ? 'bg-primary text-white rounded-br-none' 
+                <div className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.sender === 'user'
+                    ? 'bg-primary text-white rounded-br-none'
                     : 'bg-white dark:bg-dark-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-dark-600 rounded-bl-none'
-                }`}>
+                  }`}>
                   {msg.text}
                 </div>
               </div>
@@ -85,7 +84,7 @@ const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) 
 
           {/* Input */}
           <form onSubmit={handleSend} className="p-4 bg-white dark:bg-dark-800 border-t border-light-200 dark:border-dark-600 flex gap-2">
-            <input 
+            <input
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Ask for help..."

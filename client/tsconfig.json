@@ -30,6 +30,9 @@
     "include": [
         "src"
     ],
+    "exclude": [
+        "src/pages/VerifyEmail.tsx"
+    ],
     "references": [
         {
             "path": "./tsconfig.node.json"

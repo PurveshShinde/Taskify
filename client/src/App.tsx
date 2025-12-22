@@ -5,7 +5,7 @@ import { useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
-import VerifyEmail from './pages/VerifyEmail';
+// import VerifyEmail from './pages/VerifyEmail';
 import DashboardLayout from './layouts/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
 import MyTasks from './pages/dashboard/MyTasks';
@@ -42,8 +42,8 @@ const App: React.FC = () => {
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          
+          {/* <Route path="/verify-email" element={<VerifyEmail />} /> */}
+
           {/* Protected Routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
@@ -59,7 +59,7 @@ const App: React.FC = () => {
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
           </Route>
-          
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </HashRouter>
