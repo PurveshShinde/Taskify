@@ -173,4 +173,4 @@ While the original concept was inspired by the QHackathon event, this codebase r
 **Purvesh Shinde**
 
 - Full Stack Developer
-- # Repository Owner
+- Repository Owner
