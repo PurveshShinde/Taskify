@@ -3,24 +3,21 @@ import Sidebar from '../components/Sidebar';
 import { api } from '../services/api';
 import { Task } from '../types';
 import { useSpeechToText } from '../hooks/useSpeechToText';
-import { Mic, MicOff, Save, Trash2, X, AlertCircle, Menu } from 'lucide-react';
+import { Mic, MicOff, Save, Trash2, Menu } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  
+
   // Form State
   const [formData, setFormData] = useState({ title: '', description: '' });
-  
+
   // Speech Hooks
   const titleSpeech = useSpeechToText();
   const descSpeech = useSpeechToText();
 
   useEffect(() => {
-    fetchTasks();
+
   }, []);
 
   // Update form when speech transcript changes
@@ -38,33 +35,13 @@ const Dashboard: React.FC = () => {
     }
   }, [descSpeech.transcript]);
 
-  const fetchTasks = async () => {
-    try {
-      setIsLoading(true);
-      const data = await api.tasks.getAll();
-      setTasks(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const handleSelectTask = (task: Task | null) => {
-    setSelectedTask(task);
-    if (task) {
-      setFormData({ title: task.title, description: task.description });
-      setIsEditing(true); // Viewing is technically "editing" mode in this simple UI
-    } else {
-      setFormData({ title: '', description: '' });
-      setIsEditing(false);
-    }
-  };
+
+
 
   const handleCreateNew = () => {
     setSelectedTask(null);
     setFormData({ title: '', description: '' });
-    setIsEditing(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,12 +52,10 @@ const Dashboard: React.FC = () => {
       if (selectedTask) {
         // Update
         const updated = await api.tasks.update(selectedTask._id, formData);
-        setTasks(prev => prev.map(t => t._id === updated._id ? updated : t));
         setSelectedTask(updated);
       } else {
         // Create
         const created = await api.tasks.create(formData);
-        setTasks(prev => [created, ...prev]);
         setSelectedTask(created);
       }
       alert('Task saved successfully!');
@@ -93,7 +68,6 @@ const Dashboard: React.FC = () => {
     if (!selectedTask || !confirm('Are you sure you want to delete this task?')) return;
     try {
       await api.tasks.delete(selectedTask._id);
-      setTasks(prev => prev.filter(t => t._id !== selectedTask._id));
       handleCreateNew();
     } catch (err) {
       alert('Failed to delete task');
@@ -102,8 +76,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <Sidebar 
-        isOpen={isSidebarOpen} 
+      <Sidebar
+        isOpen={isSidebarOpen}
         setIsOpen={setIsSidebarOpen}
       />
 
@@ -125,7 +99,7 @@ const Dashboard: React.FC = () => {
                 {selectedTask ? 'Task Details' : 'Create New Task'}
               </h2>
               {selectedTask && (
-                <button 
+                <button
                   onClick={handleDelete}
                   className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
                   title="Delete Task"
