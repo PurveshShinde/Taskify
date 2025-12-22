@@ -1,0 +1,7 @@
+{
+  "name": "Taskify – Smart Task Manager",
+  "description": "A production-ready task management application with speech-to-text capabilities, secure authentication, and a responsive dashboard.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
