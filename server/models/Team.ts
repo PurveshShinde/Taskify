@@ -14,6 +14,12 @@ const teamSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
+  chats: [{
+    text: String,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    userName: String,
+    createdAt: { type: Date, default: Date.now }
+  }],
 }, {
   timestamps: true,
 });

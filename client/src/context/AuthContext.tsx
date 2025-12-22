@@ -13,6 +13,7 @@ interface AuthContextType {
   isDemo: boolean;
   loginWithGoogle: () => Promise<void>;
   firebaseUser: FirebaseUser | null;
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -94,8 +95,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateUser = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('taskify_current_user', JSON.stringify(userData));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, loginAsDemo, logout, isDemo, loginWithGoogle, firebaseUser }}>
+    <AuthContext.Provider value={{ user, loading, login, loginAsDemo, logout, isDemo, loginWithGoogle, firebaseUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

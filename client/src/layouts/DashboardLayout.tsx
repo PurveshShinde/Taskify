@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ProjectAssistant from '../components/ProjectAssistant';
-import { Menu, Bell, Moon, Sun } from 'lucide-react';
+import { Menu, Bell, Moon, Sun, Sparkles } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import { format, differenceInMinutes, isPast } from 'date-fns';
@@ -14,7 +14,9 @@ const DashboardLayout: React.FC = () => {
   const [notifications, setNotifications] = useState<{ id: string, msg: string, time: Date, read: boolean }[]>([]);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
+  
   const notificationRef = useRef<HTMLDivElement>(null);
+  const assistantRef = useRef<HTMLDivElement>(null);
 
   // Notification Poller
   useEffect(() => {
@@ -28,17 +30,12 @@ const DashboardLayout: React.FC = () => {
           const deadline = new Date(t.deadline);
           const diff = differenceInMinutes(deadline, now);
 
-          // Trigger if deadline is past or within 30 mins
           if (isPast(deadline) || (diff > 0 && diff <= 30)) {
             const msg = isPast(deadline)
               ? `Overdue: "${t.title}" was due at ${format(deadline, 'h:mm a')}`
               : `Reminder: "${t.title}" is due in ${diff} mins!`;
-
-            // Check if we already have this specific alert in state to avoid dupes visually
-            // In a real app, IDs would come from backend
             const id = `${t._id}-${isPast(deadline) ? 'overdue' : 'soon'}`;
 
-            // Only add if not already present
             setNotifications(prev => {
               if (prev.some(n => n.id === id)) return prev;
               return [{ id, msg, time: now, read: false }, ...prev];
@@ -47,28 +44,28 @@ const DashboardLayout: React.FC = () => {
         });
       } catch (e) { console.error(e); }
     };
-
-    const interval = setInterval(checkDeadlines, 30000); // Check every 30s
+    const interval = setInterval(checkDeadlines, 30000);
     checkDeadlines();
-
     return () => clearInterval(interval);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Click Outside Logic
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
         setShowNotifications(false);
       }
+      if (isAssistantOpen && assistantRef.current && !assistantRef.current.contains(event.target as Node)) {
+        setIsAssistantOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isAssistantOpen]);
 
   const markAsRead = (id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   };
-
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const getPageTitle = () => {
@@ -92,10 +89,10 @@ const DashboardLayout: React.FC = () => {
       />
 
       <main className="flex-1 h-full overflow-hidden flex flex-col relative w-full">
-        {/* Header */}
-        <header className="h-16 bg-white dark:bg-dark-800 border-b border-light-200 dark:border-dark-700 flex items-center justify-between px-4 md:px-8 z-10 transition-colors duration-300">
+        {/* Header - NOW DARK-900 to match Sidebar */}
+        <header className="h-16 bg-white dark:bg-dark-900 border-b border-light-200 dark:border-dark-700 flex items-center justify-between px-4 md:px-8 z-10 transition-colors duration-300">
           <div className="flex items-center gap-4">
-            <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-slate-600 dark:text-slate-300 md:hidden hover:bg-light-100 dark:hover:bg-dark-700 rounded-lg">
+            <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-slate-600 dark:text-slate-300 md:hidden hover:bg-light-100 dark:hover:bg-dark-800 rounded-lg">
               <Menu className="w-6 h-6" />
             </button>
             <h1 className="font-bold text-xl text-slate-800 dark:text-white">{getPageTitle()}</h1>
@@ -104,7 +101,7 @@ const DashboardLayout: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full text-slate-500 hover:bg-light-100 dark:text-slate-400 dark:hover:bg-dark-700 transition"
+              className="p-2 rounded-full text-slate-500 hover:bg-light-100 dark:text-slate-400 dark:hover:bg-dark-800 transition"
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -113,7 +110,7 @@ const DashboardLayout: React.FC = () => {
             <div className="relative" ref={notificationRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 rounded-full text-slate-500 hover:bg-light-100 dark:text-slate-400 dark:hover:bg-dark-700 transition relative"
+                className="p-2 rounded-full text-slate-500 hover:bg-light-100 dark:text-slate-400 dark:hover:bg-dark-800 transition relative"
               >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-dark-800"></span>}
@@ -161,11 +158,26 @@ const DashboardLayout: React.FC = () => {
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
-          <Outlet />
+          <Outlet context={{ openAssistant: () => setIsAssistantOpen(true) }} />
         </div>
 
-        {/* Project Assistant */}
-        <ProjectAssistant isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} />
+        {/* Floating Button */}
+        {!isAssistantOpen && (
+          <button
+            onClick={() => setIsAssistantOpen(true)}
+            className="fixed bottom-8 right-8 z-40 p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 group"
+            title="Ask AI Assistant"
+          >
+            <div className="absolute inset-0 rounded-full bg-white/20 animate-ping opacity-0 group-hover:opacity-100"></div>
+            <Sparkles className="w-6 h-6" />
+          </button>
+        )}
+
+        {/* Assistant Window */}
+        <div ref={assistantRef}>
+          <ProjectAssistant isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} />
+        </div>
+
       </main>
     </div>
   );

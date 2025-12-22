@@ -85,6 +85,22 @@ export const api = {
         getCurrentUser: (): User | null => {
             const stored = localStorage.getItem('taskify_current_user');
             return stored ? JSON.parse(stored) : null;
+        },
+
+        getMe: async (): Promise<User> => {
+            if (isDemoMode()) {
+                await demoDelay(300);
+                return api.auth.getCurrentUser()!;
+            }
+            const token = localStorage.getItem('taskify_token');
+            const res = await fetch(`${API_URL}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to fetch user');
+            const user = await res.json();
+            // Update local storage to keep in sync
+            localStorage.setItem('taskify_current_user', JSON.stringify(user));
+            return user;
         }
     },
 
@@ -257,6 +273,44 @@ export const api = {
             });
             if (!res.ok) throw new Error((await res.json()).message);
             return res.json();
+        }
+    },
+
+    users: {
+        getAll: async (): Promise<User[]> => {
+            if (isDemoMode()) {
+                await demoDelay(300);
+                return [
+                    { _id: 'demo-user-id', name: 'Demo User', email: 'demo@example.com' },
+                    { _id: 'u2', name: 'Alice Smith', email: 'alice@example.com' },
+                    { _id: 'u3', name: 'Bob Jones', email: 'bob@example.com' },
+                ] as any[];
+            }
+            const token = localStorage.getItem('taskify_token');
+            const res = await fetch(`${API_URL}/users`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to fetch users');
+            return res.json();
+        },
+
+        updateProfile: async (data: Partial<User>): Promise<User> => {
+            if (isDemoMode()) {
+                const currentUser = JSON.parse(localStorage.getItem('taskify_current_user') || '{}');
+                const updated = { ...currentUser, ...data };
+                localStorage.setItem('taskify_current_user', JSON.stringify(updated));
+                return updated;
+            }
+            const token = localStorage.getItem('taskify_token');
+            const res = await fetch(`${API_URL}/users/profile`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(data)
+            });
+            if (!res.ok) throw new Error('Failed to update profile');
+            const updatedUser = await res.json();
+            localStorage.setItem('taskify_current_user', JSON.stringify(updatedUser));
+            return updatedUser;
         }
     }
 };
