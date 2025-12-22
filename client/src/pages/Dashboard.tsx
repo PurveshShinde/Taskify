@@ -3,11 +3,12 @@ import Sidebar from '../components/Sidebar';
 import { api } from '../services/api';
 import { Task } from '../types';
 import { useSpeechToText } from '../hooks/useSpeechToText';
-import { Mic, MicOff, Save, Trash2, Menu } from 'lucide-react';
+import { Mic, MicOff, Save, Trash2, Menu, Sparkles, X, Send } from 'lucide-react'; // ✅ Added Icons
 
 const Dashboard: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false); // ✅ Added Assistant State
 
   // Form State
   const [formData, setFormData] = useState({ title: '', description: '' });
@@ -16,9 +17,7 @@ const Dashboard: React.FC = () => {
   const titleSpeech = useSpeechToText();
   const descSpeech = useSpeechToText();
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => { }, []);
 
   // Update form when speech transcript changes
   useEffect(() => {
@@ -35,10 +34,6 @@ const Dashboard: React.FC = () => {
     }
   }, [descSpeech.transcript]);
 
-
-
-
-
   const handleCreateNew = () => {
     setSelectedTask(null);
     setFormData({ title: '', description: '' });
@@ -50,11 +45,9 @@ const Dashboard: React.FC = () => {
 
     try {
       if (selectedTask) {
-        // Update
         const updated = await api.tasks.update(selectedTask._id, formData);
         setSelectedTask(updated);
       } else {
-        // Create
         const created = await api.tasks.create(formData);
         setSelectedTask(created);
       }
@@ -75,15 +68,16 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="flex h-screen w-full overflow-hidden bg-slate-50">
       <Sidebar
         isOpen={isSidebarOpen}
         setIsOpen={setIsSidebarOpen}
+        onOpenAssistant={() => setIsAssistantOpen(true)} // ✅ Connect Sidebar Button
       />
 
-      <main className="flex-1 h-full overflow-y-auto bg-slate-50 relative w-full">
+      <main className="flex-1 h-full overflow-y-auto bg-slate-50 relative w-full flex flex-col">
         {/* Mobile Header for Menu */}
-        <div className="md:hidden p-4 flex items-center bg-surface border-b border-slate-200 sticky top-0 z-10">
+        <div className="md:hidden p-4 flex items-center bg-white border-b border-slate-200 sticky top-0 z-10">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-slate-600">
             <Menu className="w-6 h-6" />
           </button>
@@ -92,8 +86,8 @@ const Dashboard: React.FC = () => {
           </h1>
         </div>
 
-        <div className="max-w-3xl mx-auto p-4 md:p-8">
-          <div className="bg-surface rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
+        <div className="max-w-3xl mx-auto p-4 md:p-8 w-full">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-slate-800">
                 {selectedTask ? 'Task Details' : 'Create New Task'}
@@ -121,7 +115,7 @@ const Dashboard: React.FC = () => {
                     required
                     value={formData.title}
                     onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="flex-1 rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="flex-1 rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
                     placeholder="e.g., Review Q3 Marketing Plan"
                   />
                   {titleSpeech.hasRecognition && (
@@ -147,7 +141,7 @@ const Dashboard: React.FC = () => {
                     rows={8}
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full rounded-lg border-slate-300 border px-4 py-2 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"
+                    className="w-full rounded-lg border-slate-300 border px-4 py-2 pr-12 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all resize-none"
                     placeholder="Add details about this task..."
                   />
                   {descSpeech.hasRecognition && (
@@ -167,7 +161,7 @@ const Dashboard: React.FC = () => {
               <div className="flex justify-end pt-4 border-t border-slate-100">
                 <button
                   type="submit"
-                  className="bg-primary hover:bg-indigo-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm flex items-center gap-2 transition-transform active:scale-95"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm flex items-center gap-2 transition-transform active:scale-95"
                 >
                   <Save className="w-4 h-4" />
                   {selectedTask ? 'Update Task' : 'Create Task'}
@@ -176,8 +170,66 @@ const Dashboard: React.FC = () => {
             </form>
           </div>
         </div>
+
+        {/* -------------------------------------------------- */}
+        {/* ✅ FLOATING AI BUTTON (Demo Version)               */}
+        {/* -------------------------------------------------- */}
+        {!isAssistantOpen && (
+          <button
+            onClick={() => setIsAssistantOpen(true)}
+            className="fixed bottom-8 right-8 z-40 p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 group"
+            title="Ask AI Assistant"
+          >
+            {/* Glowing effect */}
+            <div className="absolute inset-0 rounded-full bg-white/20 animate-ping opacity-0 group-hover:opacity-100"></div>
+            <Sparkles className="w-6 h-6" />
+          </button>
+        )}
+
+        {/* -------------------------------------------------- */}
+        {/* ✅ AI ASSISTANT CHAT MODAL                         */}
+        {/* -------------------------------------------------- */}
+        {isAssistantOpen && (
+          <div className="fixed bottom-8 right-8 z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-slide-up">
+            
+            {/* Header */}
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 flex justify-between items-center text-white">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                <h3 className="font-bold">Project Assistant</h3>
+              </div>
+              <button onClick={() => setIsAssistantOpen(false)} className="hover:bg-white/20 p-1 rounded transition">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Chat Body */}
+            <div className="h-80 p-4 overflow-y-auto bg-slate-50 space-y-4">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">AI</div>
+                <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm text-sm text-slate-600">
+                  Hello! I'm your Demo Assistant. I can help you test the task creation features. Try creating a task!
+                </div>
+              </div>
+            </div>
+
+            {/* Input Footer */}
+            <div className="p-3 bg-white border-t border-slate-100">
+              <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+                <input 
+                  placeholder="Ask me anything..." 
+                  className="flex-1 bg-slate-100 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                />
+                <button className="p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition">
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
       </main>
-    </>
+    </div>
   );
 };
 

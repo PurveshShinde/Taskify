@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes';
 import taskRoutes from './routes/taskRoutes';
 import teamRoutes from './routes/teamRoutes';
 import projectRoutes from './routes/projectRoutes';
+import userRoutes from './routes/userRoutes';
 import { startCronJobs } from './services/cronService';
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/users', userRoutes);
 
 // Start Background Jobs
 startCronJobs();

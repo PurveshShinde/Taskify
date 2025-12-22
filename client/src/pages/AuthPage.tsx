@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 
@@ -64,8 +63,9 @@ const AuthPage: React.FC = () => {
         // Final secure step: Send to backend to get App JWT & create Shadow User
         const { user, token } = await api.auth.firebaseLogin(idToken);
 
-        login(token, user);
-        navigate('/dashboard/tasks');
+        // ✅ CORRECTED: We only update state. App.tsx handles the router switch.
+        // NO navigate() call here.
+        login(token, user); 
       }
     } catch (err: any) {
       console.error("Auth Error:", err);

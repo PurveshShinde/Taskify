@@ -31,21 +31,34 @@ const MyTasks: React.FC = () => {
 
   useEffect(() => { loadTasks(); }, []);
 
-  // Sync Transcript to Title
+  // ✅ AUTO-STOP LOGIC: Title
   useEffect(() => {
     if (titleSpeech.transcript) {
+      // 1. Add text
       setFormData(prev => ({ ...prev, title: prev.title + (prev.title ? ' ' : '') + titleSpeech.transcript }));
+      
+      // 2. Clear buffer
       titleSpeech.resetTranscript();
+      
+      // 3. STOP LISTENING AUTOMATICALLY
+      if (titleSpeech.isListening) {
+        titleSpeech.stopListening(); 
+      }
     }
-  }, [titleSpeech.transcript]);
+  }, [titleSpeech.transcript, titleSpeech.isListening]); // Added isListening dependency
 
-  // Sync Transcript to Description
+  // ✅ AUTO-STOP LOGIC: Description
   useEffect(() => {
     if (descSpeech.transcript) {
       setFormData(prev => ({ ...prev, description: prev.description + (prev.description ? ' ' : '') + descSpeech.transcript }));
       descSpeech.resetTranscript();
+      
+      // STOP LISTENING AUTOMATICALLY
+      if (descSpeech.isListening) {
+        descSpeech.stopListening();
+      }
     }
-  }, [descSpeech.transcript]);
+  }, [descSpeech.transcript, descSpeech.isListening]);
 
   const loadTasks = async () => {
     try {

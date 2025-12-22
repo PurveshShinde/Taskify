@@ -69,7 +69,7 @@ export interface ApiError {
 }
 
 export interface ChatMessage {
-  id: string;
+  _id: string;
   text: string;
   userId: string;
   userName: string;
@@ -116,10 +116,10 @@ export interface SpeechRecognition extends EventTarget {
 declare global {
   interface Window {
     SpeechRecognition: {
-      new (): SpeechRecognition;
+      new(): SpeechRecognition;
     };
     webkitSpeechRecognition: {
-      new (): SpeechRecognition;
+      new(): SpeechRecognition;
     };
   }
 }

@@ -203,3 +203,15 @@ export const deleteAccount = async (req: any, res: any) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+// @desc    Get current user profile
+// @route   GET /api/auth/me
+// @access  Private
+export const getUserProfile = async (req: any, res: any) => {
+  const user = {
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email
+  };
+  res.status(200).json(user);
+};
