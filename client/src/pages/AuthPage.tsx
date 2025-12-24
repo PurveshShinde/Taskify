@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-
-import { CheckSquare, ArrowLeft } from 'lucide-react';
+import { CheckSquare, ArrowLeft, KeyRound } from 'lucide-react'; // Added KeyRound icon
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,12 +20,21 @@ const AuthPage: React.FC = () => {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
 
+  // Forgot Password State
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetMessage, setResetMessage] = useState({ type: '', text: '' });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setIsSignUp(searchParams.get('mode') === 'signup');
-    setError(''); // Clear error on mode switch
+    const mode = searchParams.get('mode');
+    setIsSignUp(mode === 'signup');
+    setError('');
+    setResetMessage({ type: '', text: '' });
+    // Reset the password reset view if switching main modes
+    if (mode === 'signup') setIsResettingPassword(false);
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,36 +44,31 @@ const AuthPage: React.FC = () => {
 
     try {
       if (isSignUp) {
-        // STRICT SIGNUP FLOW: Client-side only
+        // STRICT SIGNUP FLOW
         const { createUserWithEmailAndPassword, sendEmailVerification } = await import('firebase/auth');
-        const { auth } = await import('../config/firebase'); // Dynamic import to avoid cycles/bundling issues if any
+        const { auth } = await import('../config/firebase');
 
         const userCredential = await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
         await sendEmailVerification(userCredential.user);
 
         alert("Verification email sent to " + registerEmail + ". Please check your inbox and verify BEFORE logging in.");
-        setIsSignUp(false); // Switch to login mode
+        setIsSignUp(false);
         navigate('/auth?mode=signin');
       } else {
-        // STRICT LOGIN FLOW: Verify Email First
+        // STRICT LOGIN FLOW
         const { signInWithEmailAndPassword } = await import('firebase/auth');
         const { auth } = await import('../config/firebase');
 
         const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
 
-        // Force refresh to get latest claim if needed, but emailVerified property is usually up to date on fresh sign in
         if (!userCredential.user.emailVerified) {
           throw new Error("Please verify your email address before logging in. Check your inbox.");
         }
 
         const idToken = await userCredential.user.getIdToken();
-
-        // Final secure step: Send to backend to get App JWT & create Shadow User
         const { user, token } = await api.auth.firebaseLogin(idToken);
 
-        // ✅ CORRECTED: We only update state. App.tsx handles the router switch.
-        // NO navigate() call here.
-        login(token, user); 
+        login(token, user);
       }
     } catch (err: any) {
       console.error("Auth Error:", err);
@@ -77,6 +80,29 @@ const AuthPage: React.FC = () => {
         setError('Invalid email or password.');
       } else {
         setError(err.message || 'Authentication failed');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetMessage({ type: '', text: '' });
+    setLoading(true);
+
+    try {
+      const { sendPasswordResetEmail } = await import('firebase/auth');
+      const { auth } = await import('../config/firebase');
+
+      await sendPasswordResetEmail(auth, resetEmail);
+      setResetMessage({ type: 'success', text: 'Password reset link sent! Check your email.' });
+    } catch (err: any) {
+      console.error("Reset Error:", err);
+      if (err.code === 'auth/user-not-found') {
+        setResetMessage({ type: 'error', text: 'No account found with this email.' });
+      } else {
+        setResetMessage({ type: 'error', text: 'Failed to send reset link. Try again.' });
       }
     } finally {
       setLoading(false);
@@ -114,6 +140,13 @@ const AuthPage: React.FC = () => {
             error={error}
             email={loginEmail} setEmail={setLoginEmail}
             password={loginPassword} setPassword={setLoginPassword}
+            // Props for forgot password
+            isResettingPassword={isResettingPassword}
+            setIsResettingPassword={setIsResettingPassword}
+            onResetSubmit={handleResetPassword}
+            resetEmail={resetEmail}
+            setResetEmail={setResetEmail}
+            resetMessage={resetMessage}
           />
         </div>
 
@@ -159,58 +192,129 @@ const AuthPage: React.FC = () => {
   );
 };
 
-const AuthForm = ({ mode, onSubmit, loading, error, name, setName, email, setEmail, password, setPassword }: any) => (
-  <form onSubmit={onSubmit} className="flex flex-col items-center text-center w-full max-w-sm mx-auto">
-    <div className="flex items-center gap-2 text-indigo-600 font-bold text-2xl mb-8">
-      <CheckSquare className="w-8 h-8" />
-      <span>Taskify</span>
-    </div>
-    <h1 className="text-3xl font-bold mb-6 text-slate-800">{mode === 'signin' ? 'Sign In' : 'Create Account'}</h1>
+// Extracted & Enhanced AuthForm to handle Reset View
+const AuthForm = ({ 
+  mode, onSubmit, loading, error, 
+  name, setName, email, setEmail, password, setPassword,
+  // New props for reset flow
+  isResettingPassword, setIsResettingPassword, onResetSubmit, resetEmail, setResetEmail, resetMessage
+}: any) => {
+  
+  // If we are in "Forgot Password" mode (only applicable for signin)
+  if (mode === 'signin' && isResettingPassword) {
+    return (
+      <form onSubmit={onResetSubmit} className="flex flex-col items-center text-center w-full max-w-sm mx-auto">
+        <div className="flex items-center gap-2 text-indigo-600 font-bold text-2xl mb-8">
+            <KeyRound className="w-8 h-8" />
+            <span>Taskify</span>
+        </div>
+        <h1 className="text-3xl font-bold mb-4 text-slate-800">Reset Password</h1>
+        <p className="text-slate-500 mb-8 text-sm">Enter your email and we'll send you a link to reset your password.</p>
 
-    <div className="w-full space-y-4 mb-6">
-      {mode === 'signup' && (
+        <div className="w-full space-y-4 mb-6">
+            <input
+                type="email"
+                placeholder="Enter your email"
+                required
+                value={resetEmail}
+                onChange={e => setResetEmail(e.target.value)}
+                className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
+            />
+        </div>
+
+        {resetMessage?.text && (
+            <p className={`text-sm mb-4 font-medium py-1 px-3 rounded-full ${resetMessage.type === 'success' ? 'text-green-600 bg-green-50' : 'text-red-500 bg-red-50'}`}>
+                {resetMessage.text}
+            </p>
+        )}
+
+        <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-12 py-3 rounded-full font-bold uppercase text-xs tracking-wider hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 w-full mb-4">
+            {loading ? 'Sending...' : 'Send Reset Link'}
+        </button>
+
+        <button 
+            type="button" 
+            onClick={() => setIsResettingPassword(false)}
+            className="text-slate-500 text-xs font-bold uppercase tracking-wider hover:text-indigo-600 transition"
+        >
+            Back to Sign In
+        </button>
+      </form>
+    );
+  }
+
+  // Standard Login/Signup View
+  return (
+    <form onSubmit={onSubmit} className="flex flex-col items-center text-center w-full max-w-sm mx-auto">
+      <div className="flex items-center gap-2 text-indigo-600 font-bold text-2xl mb-8">
+        <CheckSquare className="w-8 h-8" />
+        <span>Taskify</span>
+      </div>
+      <h1 className="text-3xl font-bold mb-6 text-slate-800">{mode === 'signin' ? 'Sign In' : 'Create Account'}</h1>
+
+      <div className="w-full space-y-4 mb-2">
+        {mode === 'signup' && (
+          <input
+            id="signup-name"
+            name="signup-name"
+            type="text"
+            placeholder="Name"
+            required
+            autoComplete="name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
+          />
+        )}
         <input
-          id="signup-name"
-          name="signup-name"
-          type="text"
-          placeholder="Name"
+          id={`${mode}-email`}
+          name={`${mode}-email`}
+          type="email"
+          placeholder="Email"
           required
-          autoComplete="name"
-          value={name}
-          onChange={e => setName(e.target.value)}
+          autoComplete="username"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
           className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
         />
+        <input
+          id={`${mode}-password`}
+          name={`${mode}-password`}
+          type="password"
+          placeholder="Password"
+          required
+          autoComplete={mode === 'signin' ? "current-password" : "new-password"}
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
+        />
+      </div>
+
+      {mode === 'signin' && (
+        <div className="w-full text-right mb-6">
+          <button 
+            type="button"
+            onClick={() => {
+                setResetEmail(email); // Pre-fill email if user typed it
+                setIsResettingPassword(true);
+            }}
+            className="text-slate-400 text-sm hover:text-indigo-600 transition font-medium"
+          >
+            Forgot your password?
+          </button>
+        </div>
       )}
-      <input
-        id={`${mode}-email`}
-        name={`${mode}-email`}
-        type="email"
-        placeholder="Email"
-        required
-        autoComplete="username"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
-      />
-      <input
-        id={`${mode}-password`}
-        name={`${mode}-password`}
-        type="password"
-        placeholder="Password"
-        required
-        autoComplete={mode === 'signin' ? "current-password" : "new-password"}
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
-      />
-    </div>
 
-    {error && <p className="text-red-500 text-sm mb-4 font-medium bg-red-50 py-1 px-3 rounded-full">{error}</p>}
+      {/* Spacing adjustments for SignUp since it has no forgot password link */}
+      {mode === 'signup' && <div className="mb-6"></div>}
 
-    <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-12 py-3 rounded-full font-bold uppercase text-xs tracking-wider hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 w-full transform active:scale-95 duration-200 disabled:opacity-70 disabled:cursor-not-allowed">
-      {loading ? 'Processing...' : (mode === 'signin' ? 'Sign In' : 'Sign Up')}
-    </button>
-  </form>
-);
+      {error && <p className="text-red-500 text-sm mb-4 font-medium bg-red-50 py-1 px-3 rounded-full">{error}</p>}
+
+      <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-12 py-3 rounded-full font-bold uppercase text-xs tracking-wider hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 w-full transform active:scale-95 duration-200 disabled:opacity-70 disabled:cursor-not-allowed">
+        {loading ? 'Processing...' : (mode === 'signin' ? 'Sign In' : 'Sign Up')}
+      </button>
+    </form>
+  );
+};
 
 export default AuthPage;
