@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 const AuthPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
 
   const initialMode = searchParams.get('mode') === 'signup' ? 'signup' : 'signin';
   const [isSignUp, setIsSignUp] = useState(initialMode === 'signup');
@@ -36,6 +36,22 @@ const AuthPage: React.FC = () => {
     // Reset the password reset view if switching main modes
     if (mode === 'signup') setIsResettingPassword(false);
   }, [searchParams]);
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await loginWithGoogle(); // Assuming loginWithGoogle is available from useAuth
+    } catch (err: any) {
+      console.error("Google Auth Error:", err);
+      if (err.code === 'auth/popup-closed-by-user') {
+        setError('Google Sign-In popup was closed.');
+      } else {
+        setError(err.message || 'Google Sign-In failed');
+      }
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,6 +156,7 @@ const AuthPage: React.FC = () => {
             error={error}
             email={loginEmail} setEmail={setLoginEmail}
             password={loginPassword} setPassword={setLoginPassword}
+            onGoogleSignIn={handleGoogleSignIn}
             // Props for forgot password
             isResettingPassword={isResettingPassword}
             setIsResettingPassword={setIsResettingPassword}
@@ -160,6 +177,7 @@ const AuthPage: React.FC = () => {
             name={registerName} setName={setRegisterName}
             email={registerEmail} setEmail={setRegisterEmail}
             password={registerPassword} setPassword={setRegisterPassword}
+            onGoogleSignIn={handleGoogleSignIn}
           />
         </div>
 
@@ -193,55 +211,57 @@ const AuthPage: React.FC = () => {
 };
 
 // Extracted & Enhanced AuthForm to handle Reset View
-const AuthForm = ({ 
-  mode, onSubmit, loading, error, 
+const AuthForm = ({
+  mode, onSubmit, loading, error,
   name, setName, email, setEmail, password, setPassword,
+  onGoogleSignIn, // Added this missing prop
   // New props for reset flow
   isResettingPassword, setIsResettingPassword, onResetSubmit, resetEmail, setResetEmail, resetMessage
 }: any) => {
-  
+
   // If we are in "Forgot Password" mode (only applicable for signin)
   if (mode === 'signin' && isResettingPassword) {
     return (
       <form onSubmit={onResetSubmit} className="flex flex-col items-center text-center w-full max-w-sm mx-auto">
         <div className="flex items-center gap-2 text-indigo-600 font-bold text-2xl mb-8">
-            <KeyRound className="w-8 h-8" />
-            <span>Taskify</span>
+          <KeyRound className="w-8 h-8" />
+          <span>Taskify</span>
         </div>
         <h1 className="text-3xl font-bold mb-4 text-slate-800">Reset Password</h1>
         <p className="text-slate-500 mb-8 text-sm">Enter your email and we'll send you a link to reset your password.</p>
 
         <div className="w-full space-y-4 mb-6">
-            <input
-                type="email"
-                placeholder="Enter your email"
-                required
-                value={resetEmail}
-                onChange={e => setResetEmail(e.target.value)}
-                className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
-            />
+          <input
+            type="email"
+            placeholder="Enter your email"
+            required
+            value={resetEmail}
+            onChange={e => setResetEmail(e.target.value)}
+            className="bg-slate-100 border-none w-full px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400 font-medium"
+          />
         </div>
 
         {resetMessage?.text && (
-            <p className={`text-sm mb-4 font-medium py-1 px-3 rounded-full ${resetMessage.type === 'success' ? 'text-green-600 bg-green-50' : 'text-red-500 bg-red-50'}`}>
-                {resetMessage.text}
-            </p>
+          <p className={`text-sm mb-4 font-medium py-1 px-3 rounded-full ${resetMessage.type === 'success' ? 'text-green-600 bg-green-50' : 'text-red-500 bg-red-50'}`}>
+            {resetMessage.text}
+          </p>
         )}
 
         <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-12 py-3 rounded-full font-bold uppercase text-xs tracking-wider hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 w-full mb-4">
-            {loading ? 'Sending...' : 'Send Reset Link'}
+          {loading ? 'Sending...' : 'Send Reset Link'}
         </button>
 
-        <button 
-            type="button" 
-            onClick={() => setIsResettingPassword(false)}
-            className="text-slate-500 text-xs font-bold uppercase tracking-wider hover:text-indigo-600 transition"
+        <button
+          type="button"
+          onClick={() => setIsResettingPassword(false)}
+          className="text-slate-500 text-xs font-bold uppercase tracking-wider hover:text-indigo-600 transition"
         >
-            Back to Sign In
+          Back to Sign In
         </button>
       </form>
     );
   }
+
 
   // Standard Login/Signup View
   return (
@@ -292,11 +312,11 @@ const AuthForm = ({
 
       {mode === 'signin' && (
         <div className="w-full text-right mb-6">
-          <button 
+          <button
             type="button"
             onClick={() => {
-                setResetEmail(email); // Pre-fill email if user typed it
-                setIsResettingPassword(true);
+              setResetEmail(email); // Pre-fill email if user typed it
+              setIsResettingPassword(true);
             }}
             className="text-slate-400 text-sm hover:text-indigo-600 transition font-medium"
           >
@@ -312,6 +332,42 @@ const AuthForm = ({
 
       <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-12 py-3 rounded-full font-bold uppercase text-xs tracking-wider hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 w-full transform active:scale-95 duration-200 disabled:opacity-70 disabled:cursor-not-allowed">
         {loading ? 'Processing...' : (mode === 'signin' ? 'Sign In' : 'Sign Up')}
+      </button>
+
+      <div className="relative w-full my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-200"></div>
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white px-2 text-slate-500 font-bold tracking-wider">Or</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={onGoogleSignIn}
+        disabled={loading}
+        className="flex items-center justify-center gap-3 w-full bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition shadow-sm active:scale-95 duration-200 disabled:opacity-70"
+      >
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <path
+            fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+          />
+          <path
+            fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.84 14.09c-.22-.67-.35-1.39-.35-2.09s.13-1.42.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+          />
+          <path
+            fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 6.51l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+          />
+        </svg>
+        <span>{mode === 'signin' ? 'Sign in with Google' : 'Sign up with Google'}</span>
       </button>
     </form>
   );

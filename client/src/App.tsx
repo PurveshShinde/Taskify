@@ -34,18 +34,18 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Routes>
           {/* --- PUBLIC ROUTES (Clean URLs) --- */}
-          <Route 
-            path="/" 
-            element={!user ? <LandingPage /> : <Navigate to="/dashboard" replace />} 
+          <Route
+            path="/"
+            element={!user ? <LandingPage /> : <Navigate to="/dashboard" replace />}
           />
-          <Route 
-            path="/auth" 
-            element={!user ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
+          <Route
+            path="/auth"
+            element={!user ? <AuthPage /> : <Navigate to="/dashboard" replace />}
           />
 
           {/* --- PROTECTED ROUTES (Dashboard) --- */}
-          <Route 
-            path="/dashboard" 
+          <Route
+            path="/dashboard"
             element={user ? <DashboardLayout /> : <Navigate to="/auth" replace />}
           >
             {/* Nested Views */}

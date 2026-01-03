@@ -134,3 +134,7 @@ Full Stack Developer
 If you are interested in collaboration, licensing, or acquiring the full source code, please reach out directly.
 
 ---
+
+📌 **Note**  
+This repository does not contain the full working source code.  
+For licensed access to the complete implementation, see [CONTACT.md](./CONTACT.md).
