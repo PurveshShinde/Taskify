@@ -2,175 +2,135 @@
 
 ### Smart Task Management Web Application
 
-Taskify is a comprehensive, production-grade web application designed for efficient task management and team collaboration. It provides a secure, responsive, and intuitive interface for users to create projects, manage tasks, and collaborate in real-time.
+Taskify is a modern, production-grade task management web application built to demonstrate scalable full-stack engineering, secure authentication, and clean UI/UX design. The platform enables users and teams to manage projects, track tasks, and collaborate efficiently in real time.
+
+This repository is intended strictly as a **showcase and portfolio reference**.
+
+---
 
 ## Project Background & Attribution
 
-Taskify originated as a concept developed during the QHackathon organized by QHealsTechnology.
+Taskify originated from a concept explored during the **QHackathon organized by QHealsTechnology**.
 
-**Important Note:** This repository contains an **independently re-architected, refactored, and significantly enhanced version** of the application. It was developed by the repository owner to meet production-level engineering standards. While the original idea stems from the hackathon participation, this specific codebase differs substantially from the original submission in terms of architecture, security implementations, code quality, and feature set.
+> ⚠️ **Important Clarification**  
+> This repository represents an **independently re-architected, refactored, and significantly enhanced implementation** developed by the repository owner.  
+>  
+> The codebase, architecture, security model, and feature set differ substantially from the original hackathon submission and are the **sole intellectual property of the author**.
 
-## Features Overview
+---
 
-- **Secure Authentication**: Robust user authentication system using JWT, with support for Google Sign-In via Firebase.
-- **Smart Task Management**: Create, update, assign, and track tasks with status and priority indicators.
-- **Team Collaboration**: Dedicated workspaces for teams to share tasks and resources.
-- **Interactive Dashboard**: Real-time overview of project progress and upcoming deadlines.
-- **Profile Management**: distinct user profiles with customizable settings.
-- **Responsive UI**: A modern, mobile-friendly interface built for usability across devices.
-- **Notifications**: Automated email notifications for critical updates.
+## Key Features
 
-## Tech Stack
+- Secure user authentication using JWT and OAuth (Google Sign-In)
+- Project-based task organization with priorities and statuses
+- Team workspaces for collaborative task management
+- Interactive dashboard with real-time insights
+- User profile management and preferences
+- Responsive, mobile-friendly UI
+- Automated email notifications for important updates
 
-### Frontend (Client)
+---
 
-- **Framework**: React 18 (initialized via Vite)
-- **Language**: TypeScript (TSX)
-- **Styling**: Tailwind CSS (with PostCSS configuration)
-- **Routing**: React Router DOM v6
-- **State Management**: React Context API
-- **UI Components & Visualization**:
-  - Lucide React (Iconography)
-  - Framer Motion (Animations)
-  - Recharts (Data Visualization)
-- **Utilities**:
-  - Firebase Client SDK (Authentication)
-  - date-fns (Date manipulation)
+## Technology Stack
 
-### Backend (Server)
+### Frontend
+- React 18 (Vite)
+- TypeScript
+- Tailwind CSS
+- React Router DOM
+- Context API
+- Framer Motion
+- Recharts
+- Firebase Client SDK
 
-- **Runtime**: Node.js (v20+)
-- **Framework**: Express.js
-- **Language**: TypeScript
-- **Database**: MongoDB (via Mongoose ODM)
-- **Authentication & Security**:
-  - JSON Web Tokens (JWT)
-  - Bcrypt.js (Password hashing)
-  - Firebase Admin SDK (Token verification)
-  - CORS (Cross-Origin Resource Sharing)
-- **Services**:
-  - Node-cron (Scheduled background tasks)
-  - Nodemailer (Email transmission)
+### Backend
+- Node.js
+- Express.js
+- TypeScript
+- MongoDB (Mongoose)
+- JSON Web Tokens (JWT)
+- Firebase Admin SDK
+- Nodemailer
+- Node-Cron
+
+---
 
 ## Architecture Overview
 
-Taskify follows a robust **MERN (MongoDB, Express, React, Node.js)** stack architecture suitable for scalable web applications.
+Taskify follows a scalable **MERN stack architecture** with a clean separation of concerns:
 
-- **Client-Server Pattern**: The application relies on a decoupled architecture where the frontend (Client) communicates with the backend (Server) via a RESTful API.
-- **Type Safety**: TypeScript is utilized across the full stack (Frontend and Backend) to ensure type safety and reduce runtime errors.
-- **Monorepo Structure**: The repository is organized into distinct `client` and `server` directories to maintain separation of concerns while facilitating unified development.
+- **Client–Server Architecture** using REST APIs
+- **Type-safe development** across frontend and backend
+- **Modular design** for maintainability and scalability
+- **Production-oriented security practices**
 
-## Folder Structure
+The application is designed to be cloud-deployable and extensible for real-world use cases.
 
-```
-Taskify/
-├── client/                 # Frontend Application (React/Vite)
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Application route pages
-│   │   ├── context/        # React Context providers
-│   │   ├── services/       # API integration services
-│   │   └── types/          # TypeScript definitions
-│   ├── public/             # Static assets
-│   ├── index.html          # Entry HTML
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── vite.config.ts      # Vite configuration
-│
-├── server/                 # Backend Application (Node/Express)
-│   ├── src/ (or root)
-│   │   ├── config/         # Database and auth configuration
-│   │   ├── controllers/    # Request handlers
-│   │   ├── models/         # Mongoose schemas
-│   │   ├── routes/         # API route definitions
-│   │   └── server.ts       # Application entry point
-│   ├── dist/               # Compiled JavaScript output
-│   └── tsconfig.json       # TypeScript configuration
-│
-└── README.md               # Project Documentation
-```
+---
 
-## Setup & Installation
+## Repository Purpose
 
-**Prerequisites**:
+This public repository is provided **only** for:
 
-- Node.js (v20 or higher)
-- MongoDB (Local instance or Atlas URI)
-- npm or yarn
+- Portfolio demonstration
+- Architecture and system design review
+- Feature overview
+- Technical evaluation by recruiters or collaborators
 
-**Installation Steps**:
+❌ **This repository does NOT include the full working source code.**
 
-1.  **Clone the Repository**:
+---
 
-    ```bash
-    git clone <repository-url>
-    cd Taskify
-    ```
+## Source Code Access & Commercial Licensing
 
-2.  **Install Backend Dependencies**:
+The complete production source code for **Taskify** (client + server) is **not publicly available**.
 
-    ```bash
-    cd server
-    npm install
-    ```
+### Interested in purchasing the full source code?
 
-3.  **Install Frontend Dependencies**:
+If you want:
+- Full access to the complete codebase
+- Commercial usage rights
+- Custom deployment or feature extensions
+- White-label or branded versions
 
-    ```bash
-    cd ../client
-    npm install
-    ```
+📩 **Contact the author directly to discuss licensing and pricing.**
 
-4.  **Run Development Servers**:
-    - Terminal 1 (Backend): `cd server && npm run dev`
-    - Terminal 2 (Frontend): `cd client && npm run dev`
+Unauthorized copying, scraping, redistribution, or reuse of this project’s implementation is strictly prohibited.
 
-## Environment Variables
+---
 
-For the application to function correctly, environment variables must be configured. Create a `.env` file in both the `client` and `server` directories.
+## Deployment
 
-**Note**: Do not commit actual secrets to version control.
+The live application is deployed using modern cloud infrastructure:
 
-**Server (`server/.env`)**:
+- **Frontend**: Vercel
+- **Backend**: Cloud-hosted Node.js service
+- **Database**: MongoDB Atlas
 
-- `PORT`: Server listening port (e.g., 5000)
-- `MONGO_URI`: Connection string for MongoDB
-- `JWT_SECRET`: Secret key for signing JSON Web Tokens
-- `CLIENT_ORIGIN`: URL of the frontend application (for CORS)
-- `FIREBASE_SERVICE_ACCOUNT`: Configuration for Firebase Admin SDK
-- `EMAIL_USER` / `EMAIL_PASS`: Credentials for Nodemailer
+> The deployment is provided for demonstration purposes only.
 
-**Client (`client/.env`)**:
-
-- `VITE_API_URL`: Base URL of the backend API
-- `VITE_FIREBASE_API_KEY`: Firebase Client SDK configuration
-
-## Deployment Overview
-
-The application is architected for a distributed deployment:
-
-- **Frontend**: Deployed on **Vercel** to leverage edge caching and fast content delivery.
-- **Backend**: Deployed on **Render** (or similar Node.js hosting) as a persistent web service.
-- **Database**: Hosted on MongoDB Atlas.
-
-Production builds utilize the `dist` output directory generated by the TypeScript compiler and Vite bundler.
+---
 
 ## License & Usage Restrictions
 
-**Copyright Notice**
+**All Rights Reserved © 2026**
 
-All rights reserved.
+This project is protected under copyright law.
 
-This repository is strictly for **educational, portfolio, and demonstration purposes**.
+- ❌ No redistribution
+- ❌ No commercial use
+- ❌ No modification or re-publishing
+- ❌ No reverse engineering
 
-- **No Redistribution**: You may not redistribute, sub-license, or sell this code.
-- **No Commercial Use**: Use of this software for commercial purposes is strictly prohibited without explicit written permission from the author.
-- **No Modification**: You may not modify and republish this work as your own.
+Any use beyond viewing and evaluation requires **explicit written permission** from the author.
 
-While the original concept was inspired by the QHackathon event, this codebase represents the independent intellectual property of the repository maintainer. The hackathon organizers (QHealsTechnology) are credited for the prompt but bear no responsibility for this implementation.
+---
 
 ## Author / Maintainer
 
-**Purvesh Shinde**
+**Purvesh Shinde**  
+Full Stack Developer  
 
-- Full Stack Developer
-- Repository Owner
+If you are interested in collaboration, licensing, or acquiring the full source code, please reach out directly.
+
+---
