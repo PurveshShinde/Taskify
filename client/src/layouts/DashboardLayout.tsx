@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import ProjectAssistant from '../components/ProjectAssistant';
-import { Menu, Bell, Moon, Sun, Sparkles } from 'lucide-react';
+import { Menu, Bell, Moon, Sun, Sparkles, Coffee } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import { format, differenceInMinutes, isPast } from 'date-fns';
@@ -14,7 +14,7 @@ const DashboardLayout: React.FC = () => {
   const [notifications, setNotifications] = useState<{ id: string, msg: string, time: Date, read: boolean }[]>([]);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  
+
   const notificationRef = useRef<HTMLDivElement>(null);
   const assistantRef = useRef<HTMLDivElement>(null);
 
@@ -99,6 +99,16 @@ const DashboardLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <a
+              href="https://buymeacoffee.com/purvesh.dev?message=From%20Taskify"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Support the developer on Buy Me a Coffee"
+              className="p-2 rounded-full text-slate-500 hover:bg-light-100 dark:text-slate-400 dark:hover:bg-dark-800 transition"
+            >
+              <Coffee className="w-5 h-5" />
+            </a>
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full text-slate-500 hover:bg-light-100 dark:text-slate-400 dark:hover:bg-dark-800 transition"
@@ -157,8 +167,21 @@ const DashboardLayout: React.FC = () => {
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
-          <Outlet context={{ openAssistant: () => setIsAssistantOpen(true) }} />
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col">
+          <div className="flex-1">
+            <Outlet context={{ openAssistant: () => setIsAssistantOpen(true) }} />
+          </div>
+
+          <footer className="mt-8 py-4 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-light-200 dark:border-dark-700">
+            <a
+              href="https://buymeacoffee.com/purvesh.dev?message=From%20Taskify"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline flex items-center justify-center gap-1"
+            >
+              <span>☕ If Taskify helps you, consider supporting the developer.</span>
+            </a>
+          </footer>
         </div>
 
         {/* Floating Button */}
