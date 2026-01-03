@@ -1,7 +1,0 @@
-PORT=5000
-MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/taskify?retryWrites=true&w=majority
-JWT_SECRET=your_jwt_secret_key_here
-CLIENT_ORIGIN=http://localhost:5173
-FIREBASE_PROJECT_ID=your_firebase_project_id
-FIREBASE_CLIENT_EMAIL=your_firebase_client_email
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
