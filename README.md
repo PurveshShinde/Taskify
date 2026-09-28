@@ -64,7 +64,11 @@ Built with the **MERN** stack and full **TypeScript** type-safety across client 
 | :---: | :---: |
 | <img src="./assets/dashboard.png" alt="Taskify Dashboard Overview" width="100%" style="border-radius: 6px;" /> | <img src="./assets/demo.png" alt="Taskify Demo Mode" width="100%" style="border-radius: 6px;" /> |
 
-> 🎬 **Authentication Walkthrough**: Check out the recorded flow in [`assets/auth.mp4`](./assets/auth.mp4) demonstrating seamless registration, email verification, and login.
+### 🔐 Seamless Authentication & Verification Demo
+<p align="center">
+  <img src="./assets/auth.gif" alt="Taskify Authentication Flow Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+</p>
+<p align="center"><em>Real-time registration, email verification token dispatch, and Google OAuth login flow.</em></p>
 
 ---
 
