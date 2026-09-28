@@ -64,6 +64,12 @@ Built with the **MERN** stack and full **TypeScript** type-safety across client 
 | :---: | :---: |
 | <img src="./assets/dashboard.png" alt="Taskify Dashboard Overview" width="100%" style="border-radius: 6px;" /> | <img src="./assets/demo.png" alt="Taskify Demo Mode" width="100%" style="border-radius: 6px;" /> |
 
+### 👥 Collaborative Team Spaces & Live Discussions
+<p align="center">
+  <img src="./assets/teams.png" alt="Taskify Team Collaboration Space" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+</p>
+<p align="center"><em>Dedicated Team Workspaces featuring real-time discussion streams, member invitations, and shared team tasks.</em></p>
+
 ### 🔐 Seamless Authentication & Verification Demo
 <p align="center">
   <img src="./assets/auth.gif" alt="Taskify Authentication Flow Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
@@ -76,8 +82,8 @@ Built with the **MERN** stack and full **TypeScript** type-safety across client 
 
 - 🎙️ **Voice / Speech-to-Text Task Creation**: Dictate tasks directly into Taskify using the browser's Web Speech API for hands-free workflow capture.
 - 🤖 **Interactive AI Project Assistant**: Floating chat companion that assists with organizing priorities, suggesting project structures, and optimizing productivity.
+- 👥 **Collaborative Team Spaces**: Create dedicated team workspaces, invite members, conduct in-app discussions, and track shared team tasks in real time.
 - 📊 **Visual Analytics & Status Metrics**: Real-time project completion rates, todo distribution charts (powered by Recharts), and priority filters (Low, Medium, High).
-- 👥 **Team Workspaces & Collaboration**: Create teams, invite team members, assign task responsibilities, and monitor group velocity.
 - 🔐 **Dual Secure Authentication**:
   - Email & password with token verification powered by Nodemailer.
   - One-click Google Sign-In with Firebase Authentication & server-side Firebase Admin ID token verification.
@@ -119,7 +125,9 @@ Taskify/
 │   ├── home.png             # Landing page preview
 │   ├── dashboard.png        # Dashboard & AI assistant preview
 │   ├── demo.png             # Demo mode preview
-│   └── auth.mp4             # Auth demo recording
+│   ├── teams.png            # Collaborative team space preview
+│   ├── auth.gif             # Animated auth demo
+│   └── auth.mp4             # High-res auth recording
 ├── client/                  # Frontend Single Page Application
 │   ├── public/              # Static assets & icons
 │   ├── src/
