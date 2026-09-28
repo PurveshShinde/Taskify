@@ -25,9 +25,8 @@ build/
 # Environment Variables
 # =========================
 .env
-.env.*
+.env*.local
 *.local
-!.env.example
 
 # =========================
 # Vite / Cache
