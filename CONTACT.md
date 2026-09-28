@@ -1,24 +1,16 @@
-# Contact & Licensing
+# Contact & Community
 
-Thank you for your interest in **Taskify**.
+Thank you for your interest in **Taskify**! Taskify is an open-source project and contributions, questions, feedback, and collaboration are welcome.
 
-The complete production source code (frontend + backend) is **not publicly available**.
+## How to Get in Touch
 
-## Available Options
+- **GitHub Issues**: For bug reports, feature requests, or troubleshooting, please open an issue in the [GitHub Repository](https://github.com/PurveshShinde/Taskify/issues).
+- **GitHub Discussions / PRs**: Ideas, architectural discussions, and pull requests are welcomed.
+- **Support & Sponsorship**: If you find this project helpful and want to support ongoing development, consider buying me a coffee:  
+  ☕ [Buy Me a Coffee](https://buymeacoffee.com/purvesh.dev?message=From%20Taskify)
 
-You may contact the author for:
+## Author
 
-- Full source code purchase
-- Commercial or organizational licensing
-- Custom deployment or branding
-- Feature extensions or integrations
-- Consulting or collaboration
-
-## Contact
-
-**Author:** Purvesh Shinde  
-**Role:** Full Stack Developer  
-
-📩 Reach out via GitHub or LinkedIn to discuss licensing and pricing.
-
-> Any use, redistribution, or commercial deployment of Taskify without explicit written permission is strictly prohibited.
+- **Maintainer**: Purvesh Shinde
+- **Role**: Full Stack Developer
+- **GitHub**: [@PurveshShinde](https://github.com/PurveshShinde)
