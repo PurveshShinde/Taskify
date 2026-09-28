@@ -10,15 +10,6 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase once; use fallback config if env is not configured yet
-const app = getApps().length > 0 
-    ? getApp() 
-    : initializeApp(firebaseConfig.apiKey ? firebaseConfig : {
-        apiKey: "AIzaSyDummyKeyForDev",
-        authDomain: "taskify-demo.firebaseapp.com",
-        projectId: "taskify-demo"
-    });
-
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
-
