@@ -23,7 +23,7 @@
     <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-5.0-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
     <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-    <img src="https://img.shields.io/badge/Node.js-20.x-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js" />
+    <img src="https://img.shields.io/badge/Node.js-24.22.1-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js" />
     <img src="https://img.shields.io/badge/Express-4.18-000000?style=flat-square&logo=express&logoColor=white" alt="Express" />
     <img src="https://img.shields.io/badge/MongoDB-8.0-47A248?style=flat-square&logo=mongodb&logoColor=white" alt="MongoDB" />
     <img src="https://img.shields.io/badge/Firebase-Auth-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase" />
@@ -106,7 +106,7 @@ Built with the **MERN** stack and full **TypeScript** type-safety across client 
 - **Date Utilities**: [date-fns](https://date-fns.org/)
 
 ### Backend
-- **Runtime**: [Node.js](https://nodejs.org/) (20.x)
+- **Runtime**: [Node.js](https://nodejs.org/) (>=24.22.1)
 - **Framework**: [Express.js](https://expressjs.com/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/) (`tsx` for dev)
 - **Database**: [MongoDB](https://www.mongodb.com/) via [Mongoose ODM](https://mongoosejs.com/)
@@ -160,7 +160,7 @@ Taskify/
 
 ### 1. Prerequisites
 Ensure you have the following installed on your machine:
-- [Node.js](https://nodejs.org/) (v18 or v20+)
+- [Node.js](https://nodejs.org/) (>=24.22.1)
 - [npm](https://www.npmjs.com/)
 - [MongoDB](https://www.mongodb.com/) (Local instance or free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster)
 

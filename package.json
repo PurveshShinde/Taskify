@@ -1,6 +1,9 @@
 {
     "name": "taskify-root",
     "private": true,
+    "engines": {
+        "node": ">=24.22.1"
+    },
     "scripts": {
         "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
         "dev:client": "npm run dev --prefix client",
