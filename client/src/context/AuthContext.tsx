@@ -16,13 +16,37 @@ interface AuthContextType {
   updateUser: (user: User) => void;
 }
 
+export const DEMO_USER: User = {
+  _id: 'demo-user-id',
+  name: 'Demo User',
+  email: 'demo@taskify.app',
+  createdAt: new Date().toISOString()
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [isDemo, setIsDemo] = useState<boolean>(() => isDemoMode());
+  const [user, setUser] = useState<User | null>(() => {
+    if (isDemoMode()) {
+      return DEMO_USER;
+    }
+    const token = localStorage.getItem('taskify_token') || sessionStorage.getItem('taskify_token');
+    const stored = localStorage.getItem('taskify_current_user');
+    if (token && stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isDemo, setIsDemo] = useState(false);
+  const [loading, setLoading] = useState<boolean>(() => {
+    // If demo mode is active, state is synchronously ready immediately
+    return !isDemoMode();
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
@@ -32,15 +56,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           const token = await fbUser.getIdToken();
           const { user: appUser, token: appToken } = await api.auth.firebaseLogin(token);
+          // If we had demo mode active, clear it when real user logs in
+          sessionStorage.removeItem('is_demo_mode');
+          localStorage.removeItem('is_demo_mode');
+          setIsDemo(false);
           login(appToken, appUser);
         } catch (error) {
           console.error("Backend sync failed", error);
-          // If backend sync fails (e.g. unverified email), force logout from firebase too or handle gracefully
-          // For now, we keep firebase user but app user is null
         }
       } else {
-        // Only clear if not in demo mode
-        if (!isDemo) {
+        // Only clear if NOT in demo mode
+        if (!isDemoMode()) {
           setUser(null);
         }
       }
@@ -48,22 +74,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return () => unsubscribe();
-  }, [isDemo]);
-
-  // Demo Mode Persistence
-  useEffect(() => {
-    if (isDemoMode()) {
-      setIsDemo(true);
-      api.auth.login('', '').then(({ user }) => {
-        setUser(user);
-        setLoading(false);
-      });
-    }
   }, []);
 
-
   const login = (token: string, userData: User) => {
+    sessionStorage.removeItem('is_demo_mode');
+    localStorage.removeItem('is_demo_mode');
+    setIsDemo(false);
     localStorage.setItem('taskify_token', token);
+    localStorage.setItem('taskify_current_user', JSON.stringify(userData));
     setUser(userData);
   };
 
@@ -78,20 +96,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginAsDemo = async () => {
     sessionStorage.setItem('is_demo_mode', 'true');
+    localStorage.setItem('is_demo_mode', 'true');
+    sessionStorage.setItem('taskify_token', 'demo-token');
+    localStorage.setItem('taskify_current_user', JSON.stringify(DEMO_USER));
     setIsDemo(true);
-    const { user } = await api.auth.login('demo', 'demo');
-    setUser(user);
+    setUser(DEMO_USER);
+    setLoading(false);
   };
 
   const logout = async () => {
-    if (isDemo) {
-      sessionStorage.removeItem('is_demo_mode');
-      setIsDemo(false);
-      setUser(null);
-    } else {
+    sessionStorage.removeItem('is_demo_mode');
+    localStorage.removeItem('is_demo_mode');
+    sessionStorage.removeItem('taskify_token');
+    localStorage.removeItem('taskify_token');
+    localStorage.removeItem('taskify_current_user');
+    setIsDemo(false);
+    setUser(null);
+    try {
       await signOut(auth);
-      localStorage.removeItem('taskify_token');
-      setUser(null);
+    } catch {
+      // Ignore signOut errors if not signed in to Firebase
     }
   };
 

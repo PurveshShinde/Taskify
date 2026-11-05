@@ -3,17 +3,18 @@
 @tailwind utilities;
 
 @layer base {
-
     html,
     body {
         scroll-behavior: smooth;
+        background-color: #f5f6f8;
+        color: #1e293b;
     }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar for clean Bento aesthetic */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -21,14 +22,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 4px;
+    background: #cbd5e1;
+    border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: #94a3b8;
 }

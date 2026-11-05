@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, Bot } from 'lucide-react';
+import { X, Send, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
@@ -16,7 +16,11 @@ interface ProjectAssistantProps {
 const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', text: "Hi! I'm your Taskify Assistant. I can help you organize tasks, suggest project structures, or just chat about productivity. How can I help today?", sender: 'bot' }
+    {
+      id: '1',
+      text: "Hi! I'm your Taskify Assistant. I can help organize tasks, break down complex milestones, or suggest priorities for your Craftboard Project. How can I help today?",
+      sender: 'bot',
+    },
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -29,52 +33,70 @@ const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) 
     if (!input.trim()) return;
 
     const userMsg: Message = { id: Date.now().toString(), text: input, sender: 'user' };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     setInput('');
 
-    // Simulate AI delay
     setTimeout(() => {
       const botResponse = generateResponse(userMsg.text);
-      setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: botResponse, sender: 'bot' }]);
-    }, 1000);
+      setMessages((prev) => [
+        ...prev,
+        { id: (Date.now() + 1).toString(), text: botResponse, sender: 'bot' },
+      ]);
+    }, 800);
   };
 
   const generateResponse = (text: string): string => {
     const lower = text.toLowerCase();
-    if (lower.includes('project')) return "To start a new project, define your goals first. I suggest creating a 'Project Initiation' task list including: Scope Definition, Team Selection, and Initial Timeline.";
-    if (lower.includes('task') || lower.includes('todo')) return "Breaking down tasks makes them manageable. Try the SMART criteria: Specific, Measurable, Achievable, Relevant, and Time-bound.";
-    if (lower.includes('hello') || lower.includes('hi')) return "Hello there! Ready to get things done?";
-    return "That's interesting! I recommend checking your Dashboard analytics to see how that fits into your current workflow productivity.";
+    if (lower.includes('project') || lower.includes('craftboard')) {
+      return "For the Craftboard Project, focus on the 3 'On Progress' items first—especially the Super Admin Role. Once completed, your sprint velocity will hit 90%.";
+    }
+    if (lower.includes('task') || lower.includes('todo')) {
+      return "You can dictate tasks with your microphone anywhere using the Web Speech API! Try saying 'Schedule quarterly sprint review and set priority high'.";
+    }
+    if (lower.includes('hello') || lower.includes('hi')) {
+      return 'Hello! Ready to streamline your workspace? Ask me to break down any goal into actionable steps.';
+    }
+    return "Noted! I've analyzed your current task distribution across Craftboard Project and updated your productivity metrics.";
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 50, scale: 0.9 }}
-          className="fixed bottom-6 right-6 w-96 h-[500px] bg-white dark:bg-dark-800 rounded-2xl shadow-2xl border border-light-200 dark:border-dark-600 z-50 flex flex-col overflow-hidden"
+          exit={{ opacity: 0, y: 30, scale: 0.95 }}
+          className="w-full h-full bg-white flex flex-col overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-primary p-4 flex justify-between items-center text-white">
-            <div className="flex items-center gap-2 font-bold">
-              <Bot className="w-6 h-6" />
-              <span>Project Assistant</span>
+          <div className="bg-[#0f172a] p-3.5 flex justify-between items-center text-white shrink-0">
+            <div className="flex items-center gap-2 font-semibold text-xs tracking-tight">
+              <Sparkles className="w-4 h-4 text-indigo-400" />
+              <span>Taskify AI Assistant</span>
             </div>
-            <button onClick={onClose} className="hover:bg-white/20 p-1 rounded-full transition">
-              <X className="w-5 h-5" />
+            <button
+              onClick={onClose}
+              className="hover:bg-white/10 p-1 rounded-lg text-slate-400 hover:text-white transition"
+              title="Close Assistant"
+            >
+              <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-dark-900">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#fafbfc]">
             {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.sender === 'user'
-                    ? 'bg-primary text-white rounded-br-none'
-                    : 'bg-white dark:bg-dark-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-dark-600 rounded-bl-none'
-                  }`}>
+              <div
+                key={msg.id}
+                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${
+                    msg.sender === 'user'
+                      ? 'bg-[#0f172a] text-white rounded-br-xs shadow-xs'
+                      : 'bg-white text-slate-800 border border-[#eaecf0] shadow-xs rounded-bl-xs'
+                  }`}
+                >
                   {msg.text}
                 </div>
               </div>
@@ -83,15 +105,22 @@ const ProjectAssistant: React.FC<ProjectAssistantProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Input */}
-          <form onSubmit={handleSend} className="p-4 bg-white dark:bg-dark-800 border-t border-light-200 dark:border-dark-600 flex gap-2">
+          <form
+            onSubmit={handleSend}
+            className="p-3 bg-white border-t border-[#eaecf0] flex items-center gap-2 shrink-0"
+          >
             <input
               value={input}
-              onChange={e => setInput(e.target.value)}
-              placeholder="Ask for help..."
-              className="flex-1 bg-slate-100 dark:bg-dark-700 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none dark:text-white"
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask assistant to organize or prioritize..."
+              className="flex-1 bg-[#f4f5f8] border border-[#eaecf0] rounded-xl px-3.5 py-2 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none text-slate-800 placeholder-slate-400"
             />
-            <button type="submit" className="bg-primary text-white p-2 rounded-full hover:bg-indigo-700 transition disabled:opacity-50" disabled={!input.trim()}>
-              <Send className="w-4 h-4" />
+            <button
+              type="submit"
+              disabled={!input.trim()}
+              className="bg-[#0f172a] text-white p-2 rounded-xl hover:bg-slate-800 transition disabled:opacity-40"
+            >
+              <Send className="w-3.5 h-3.5" />
             </button>
           </form>
         </motion.div>

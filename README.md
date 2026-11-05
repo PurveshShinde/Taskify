@@ -50,7 +50,7 @@ Built with the **MERN** stack and end-to-end **TypeScript** type-safety across c
   - Email & password registration with cryptographic token verification powered by Nodemailer.
   - One-click Google Sign-In with Firebase Authentication and server-side Firebase Admin ID token verification.
 - **Interactive Demo Mode**: Zero-setup evaluation environment allowing users to explore full capabilities without requiring database provisioning or account registration.
-- **Glassmorphic Interface & Adaptive Theming**: Dark/Light mode theme system, fluid micro-interactions with Framer Motion, and Tailwind CSS typography.
+- **Refined Light Aesthetic & Bento Grid UI**: Clean, distraction-free light workspace featuring modular Bento cards, subtle border contrasts, fluid micro-interactions with Framer Motion, and Tailwind CSS typography.
 - **Automated Background Jobs & Keep-Alive Service**: Node-Cron scheduled deadline notifications and an automated 8-minute keep-alive ping engine to prevent Render free-tier instances from spinning down.
 
 ---
@@ -304,9 +304,8 @@ Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for more detai
 
 ---
 
-## Author & Support
+## Author
 
 **Purvesh Shinde**  
 - GitHub: [@PurveshShinde](https://github.com/PurveshShinde)  
-- Project Repository: [https://github.com/PurveshShinde/Taskify](https://github.com/PurveshShinde/Taskify)  
-- Support the Project: **[Buy Me a Coffee](https://buymeacoffee.com/purvesh.dev?message=From%20Taskify)**
+- Project Repository: [https://github.com/PurveshShinde/Taskify](https://github.com/PurveshShinde/Taskify)

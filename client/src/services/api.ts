@@ -1,30 +1,53 @@
 import { User, Task, AuthResponse, Team, Project } from '../types';
 import { API_URL } from '../constants';
 
-// Mock data for demo mode
+// Mock data for demo mode matching Craftboard Project screenshot
 let mockData = {
     users: [] as User[],
-    tasks: [] as Task[],
+    tasks: [
+        { _id: 't-1', title: 'Employee Details', description: 'Create a page where there is information about employees', status: 'pending', priority: 'medium', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date(Date.now() + 86400000 * 5).toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-2', title: 'Bento UI Refinements', description: 'Light aesthetic layout polish for all screens', status: 'pending', priority: 'low', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date(Date.now() + 86400000 * 4).toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-3', title: 'Super Admin Role', description: 'Manage access controls and permissions', status: 'pending', priority: 'medium', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date(Date.now() + 86400000 * 3).toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-4', title: 'Super Admin Role', description: 'Configure multi-tier governance', status: 'in-progress', priority: 'high', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date(Date.now() + 86400000 * 2).toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-5', title: 'Settings Page', description: 'Account settings and notification preferences', status: 'in-progress', priority: 'medium', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date(Date.now() + 86400000 * 2).toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-6', title: 'KPI and Employee Statistics', description: 'Create a design that displays KPIs and employee statistics', status: 'in-progress', priority: 'low', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date(Date.now() + 86400000 * 1).toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-7', title: 'Customer Role', description: 'Customer access rules and interface permissions', status: 'completed', priority: 'medium', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date().toISOString(), createdAt: new Date().toISOString() },
+        { _id: 't-8', title: 'Admin Role', description: 'Set up with relevant information such as profile picture, phone number etc', status: 'completed', priority: 'high', userId: 'demo-user-id', projectId: 'proj-1', deadline: new Date().toISOString(), createdAt: new Date().toISOString() }
+    ] as Task[],
     teams: [] as Team[],
-    projects: [] as Project[],
+    projects: [
+        { _id: 'proj-1', title: 'Craftboard Project', description: 'Design system and core dashboard modules', status: 'active', priority: 'high', progress: 75, ownerId: 'demo-user-id', createdAt: new Date().toISOString() },
+        { _id: 'proj-2', title: 'Visionary Tasks', description: 'Product roadmap & vision mapping', status: 'active', priority: 'medium', progress: 40, ownerId: 'demo-user-id', createdAt: new Date().toISOString() },
+        { _id: 'proj-3', title: 'Infrastructure Core', description: 'Legacy architecture cleanup and API optimization', status: 'active', priority: 'low', progress: 20, ownerId: 'demo-user-id', createdAt: new Date().toISOString() },
+        { _id: 'proj-4', title: 'Angular Studio', description: 'Component kit migration and benchmark', status: 'active', priority: 'medium', progress: 60, ownerId: 'demo-user-id', createdAt: new Date().toISOString() },
+        { _id: 'proj-5', title: 'Kudemo Workspace', description: 'Collaborative team demonstration workspace', status: 'active', priority: 'high', progress: 85, ownerId: 'demo-user-id', createdAt: new Date().toISOString() }
+    ] as Project[],
     chats: [] as any[]
 };
 
 const demoDelay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const isDemoMode = () => sessionStorage.getItem('is_demo_mode') === 'true';
+export const isDemoMode = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    return (
+        sessionStorage.getItem('is_demo_mode') === 'true' ||
+        localStorage.getItem('is_demo_mode') === 'true' ||
+        window.location.pathname.startsWith('/demo')
+    );
+};
 
 export const api = {
     auth: {
         login: async (email: string, password: string): Promise<AuthResponse> => {
             if (isDemoMode()) {
-                await demoDelay(500);
                 const demoUser = {
                     _id: 'demo-user-id',
                     name: 'Demo User',
-                    email: 'demo@example.com',
+                    email: 'demo@taskify.app',
                     createdAt: new Date().toISOString()
                 };
+                sessionStorage.setItem('is_demo_mode', 'true');
+                localStorage.setItem('is_demo_mode', 'true');
                 sessionStorage.setItem('taskify_token', 'demo-token');
                 localStorage.setItem('taskify_current_user', JSON.stringify(demoUser));
                 return { user: demoUser, token: 'demo-token' };
@@ -80,9 +103,19 @@ export const api = {
             localStorage.removeItem('taskify_token');
             localStorage.removeItem('taskify_current_user');
             sessionStorage.removeItem('is_demo_mode');
+            localStorage.removeItem('is_demo_mode');
         },
 
         getCurrentUser: (): User | null => {
+            if (isDemoMode()) {
+                const stored = localStorage.getItem('taskify_current_user');
+                return stored ? JSON.parse(stored) : {
+                    _id: 'demo-user-id',
+                    name: 'Demo User',
+                    email: 'demo@taskify.app',
+                    createdAt: new Date().toISOString()
+                };
+            }
             const stored = localStorage.getItem('taskify_current_user');
             return stored ? JSON.parse(stored) : null;
         },
@@ -227,13 +260,40 @@ export const api = {
 
     teams: {
         getAll: async (): Promise<Team[]> => {
-            if (isDemoMode()) return [];
+            if (isDemoMode()) {
+                if (mockData.teams.length === 0) {
+                    mockData.teams = [
+                        {
+                            _id: 'team-demo-1',
+                            name: 'Kudemo Workspace',
+                            members: [
+                                { _id: 'demo-user-id', name: 'Demo User', email: 'demo@taskify.app' } as any,
+                                { _id: 'u2', name: 'Alice Smith', email: 'alice@taskify.app' } as any,
+                                { _id: 'u3', name: 'Bob Jones', email: 'bob@taskify.app' } as any
+                            ],
+                            ownerId: 'demo-user-id',
+                            createdAt: new Date().toISOString()
+                        }
+                    ];
+                }
+                return mockData.teams;
+            }
             const token = localStorage.getItem('taskify_token');
             const res = await fetch(`${API_URL}/teams`, { headers: { 'Authorization': `Bearer ${token}` } });
             return res.json();
         },
         create: async (name: string): Promise<Team> => {
-            if (isDemoMode()) throw new Error("Teams feature requires an account.");
+            if (isDemoMode()) {
+                const newTeam: Team = {
+                    _id: 'team-' + Date.now(),
+                    name,
+                    members: [{ _id: 'demo-user-id', name: 'Demo User', email: 'demo@taskify.app' } as any],
+                    ownerId: 'demo-user-id',
+                    createdAt: new Date().toISOString()
+                };
+                mockData.teams.push(newTeam);
+                return newTeam;
+            }
             const token = localStorage.getItem('taskify_token');
             const res = await fetch(`${API_URL}/teams`, {
                 method: 'POST',
@@ -243,19 +303,37 @@ export const api = {
             return res.json();
         },
         getById: async (id: string) => {
-            if (isDemoMode()) return undefined;
+            if (isDemoMode()) {
+                return mockData.teams.find(t => t._id === id) || mockData.teams[0] || {
+                    _id: id,
+                    name: 'Kudemo Workspace',
+                    members: [
+                        { _id: 'demo-user-id', name: 'Demo User', email: 'demo@taskify.app' } as any,
+                        { _id: 'u2', name: 'Alice Smith', email: 'alice@taskify.app' } as any
+                    ],
+                    ownerId: 'demo-user-id',
+                    createdAt: new Date().toISOString()
+                };
+            }
             const token = localStorage.getItem('taskify_token');
             const res = await fetch(`${API_URL}/teams/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
             return res.json();
         },
         getChats: async (teamId: string) => {
-            if (isDemoMode()) return [];
+            if (isDemoMode()) {
+                return [
+                    { _id: 'c1', teamId, text: 'Welcome to the Kudemo Workspace!', sender: { _id: 'u2', name: 'Alice Smith' }, createdAt: new Date(Date.now() - 3600000).toISOString() },
+                    { _id: 'c2', teamId, text: 'Feel free to test real-time collaboration, tasks, and analytics.', sender: { _id: 'u3', name: 'Bob Jones' }, createdAt: new Date().toISOString() }
+                ];
+            }
             const token = localStorage.getItem('taskify_token');
             const res = await fetch(`${API_URL}/teams/${teamId}/chat`, { headers: { 'Authorization': `Bearer ${token}` } });
             return res.json();
         },
         sendChat: async (teamId: string, text: string) => {
-            if (isDemoMode()) return;
+            if (isDemoMode()) {
+                return;
+            }
             const token = localStorage.getItem('taskify_token');
             await fetch(`${API_URL}/teams/${teamId}/chat`, {
                 method: 'POST',
@@ -264,7 +342,9 @@ export const api = {
             });
         },
         invite: async (teamId: string, email: string) => {
-            if (isDemoMode()) throw new Error("Unavailable in demo");
+            if (isDemoMode()) {
+                return { message: `Demo invitation sent to ${email}` };
+            }
             const token = localStorage.getItem('taskify_token');
             const res = await fetch(`${API_URL}/teams/${teamId}/invite`, {
                 method: 'POST',

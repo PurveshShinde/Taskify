@@ -131,21 +131,19 @@ const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/20 rounded-full blur-[100px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[100px]"></div>
-      </div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000006_1px,transparent_1px),linear-gradient(to_bottom,#00000006_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       <Link
         to="/"
-        className="absolute top-8 left-8 flex items-center gap-2 text-white/70 hover:text-white transition px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 backdrop-blur-sm z-50 font-medium text-sm"
+        className="absolute top-8 left-8 flex items-center gap-2 text-slate-700 hover:text-slate-900 transition px-4 py-2 rounded-xl bg-white border border-[#eaecf0] hover:bg-slate-50 shadow-xs z-50 font-medium text-xs"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Home
+        <ArrowLeft className="w-3.5 h-3.5" />
+        <span>Back to Home</span>
       </Link>
 
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-[600px] flex overflow-hidden relative z-10">
+      <div className="bg-white rounded-3xl shadow-xl border border-[#eaecf0] w-full max-w-4xl h-[600px] flex overflow-hidden relative z-10">
 
         {/* Sign In Form (Left Panel) */}
         <div className={`w-1/2 p-12 flex flex-col justify-center transition-all duration-500 absolute top-0 h-full ${isSignUp ? 'translate-x-full opacity-0 z-0' : 'left-0 opacity-100 z-10'}`}>
@@ -369,6 +367,15 @@ const AuthForm = ({
         </svg>
         <span>{mode === 'signin' ? 'Sign in with Google' : 'Sign up with Google'}</span>
       </button>
+
+      <div className="mt-5 pt-4 border-t border-slate-100 text-center">
+        <Link
+          to="/demo"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition"
+        >
+          <span>Just exploring? Try the instant Demo Dashboard &rarr;</span>
+        </Link>
+      </div>
     </form>
   );
 };

@@ -4,18 +4,26 @@ import { useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Layouts & Pages
-import DashboardLayout from './layouts/DashboardLayout'; // Check this path!
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 
-// Dashboard Views
+// 1. ISOLATED DEMO DASHBOARD (Completely Separate, Zero Auth Gate, Standalone)
+import DemoDashboardLayout from './layouts/DemoDashboardLayout';
+import DemoDashboardHome from './pages/demo/DemoDashboardHome';
+import DemoTasks from './pages/demo/DemoTasks';
+import DemoProjects from './pages/demo/DemoProjects';
+import DemoTeams from './pages/demo/DemoTeams';
+import DemoStatus from './pages/demo/DemoStatus';
+import DemoSettings from './pages/demo/DemoSettings';
+
+// 2. AUTHENTICATED USER DASHBOARD (Connected to Backend, Gated by OAuth/Auth)
+import DashboardLayout from './layouts/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
 import MyTasks from './pages/dashboard/MyTasks';
 import MyProjects from './pages/dashboard/MyProjects';
 import Teams from './pages/dashboard/Teams';
 import TeamDetails from './pages/dashboard/TeamDetails';
 import Status from './pages/dashboard/Status';
-import Profile from './pages/dashboard/Profile';
 import Settings from './pages/dashboard/Settings';
 
 const App: React.FC = () => {
@@ -23,8 +31,8 @@ const App: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-slate-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="flex items-center justify-center h-screen bg-[#f8f9fa]">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-slate-200 border-t-indigo-600"></div>
       </div>
     );
   }
@@ -33,7 +41,7 @@ const App: React.FC = () => {
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
-          {/* --- PUBLIC ROUTES (Clean URLs) --- */}
+          {/* --- PUBLIC MARKETING & AUTH ROUTES --- */}
           <Route
             path="/"
             element={!user ? <LandingPage /> : <Navigate to="/dashboard" replace />}
@@ -43,20 +51,36 @@ const App: React.FC = () => {
             element={!user ? <AuthPage /> : <Navigate to="/dashboard" replace />}
           />
 
-          {/* --- PROTECTED ROUTES (Dashboard) --- */}
+          {/* ========================================================
+              DASHBOARD 1: DEDICATED DEMO DASHBOARD
+              (Zero Auth / No OAuth Required / Persistent Across Refresh)
+             ======================================================== */}
+          <Route path="/demo" element={<DemoDashboardLayout />}>
+            <Route index element={<DemoDashboardHome />} />
+            <Route path="tasks" element={<DemoTasks />} />
+            <Route path="projects" element={<DemoProjects />} />
+            <Route path="teams" element={<DemoTeams />} />
+            <Route path="status" element={<DemoStatus />} />
+            <Route path="settings" element={<DemoSettings />} />
+            <Route path="profile" element={<Navigate to="/demo/settings" replace />} />
+          </Route>
+
+          {/* ========================================================
+              DASHBOARD 2: REAL USER DASHBOARD
+              (Authenticated via OAuth/Firebase, Protected, Real Data)
+             ======================================================== */}
           <Route
             path="/dashboard"
             element={user ? <DashboardLayout /> : <Navigate to="/auth" replace />}
           >
-            {/* Nested Views */}
             <Route index element={<DashboardHome />} />
             <Route path="tasks" element={<MyTasks />} />
             <Route path="projects" element={<MyProjects />} />
             <Route path="teams" element={<Teams />} />
             <Route path="teams/:teamId" element={<TeamDetails />} />
             <Route path="status" element={<Status />} />
-            <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="profile" element={<Navigate to="/dashboard/settings" replace />} />
           </Route>
 
           {/* --- CATCH ALL --- */}
