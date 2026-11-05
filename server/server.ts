@@ -5,6 +5,7 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
 import { connectDB } from './config/db';
 import authRoutes from './routes/authRoutes';
 import taskRoutes from './routes/taskRoutes';
@@ -12,6 +13,7 @@ import teamRoutes from './routes/teamRoutes';
 import projectRoutes from './routes/projectRoutes';
 import userRoutes from './routes/userRoutes';
 import { startCronJobs } from './services/cronService';
+import { startKeepAliveService } from './services/keepAliveService';
 
 const app = express();
 
@@ -38,6 +40,22 @@ app.use(cors({
 
 app.use(express.json());
 
+// Health check & Root endpoints
+app.get('/health', (_req, res) => {
+    const dbState = mongoose.connection.readyState;
+    const isDbConnected = dbState === 1;
+    res.status(isDbConnected ? 200 : 503).json({
+        status: isDbConnected ? 'ok' : 'degraded',
+        database: isDbConnected ? 'connected' : dbState === 2 ? 'connecting' : 'disconnected',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+    });
+});
+
+app.get('/', (_req, res) => {
+    res.status(200).send('Taskify API is running');
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
@@ -45,16 +63,14 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/users', userRoutes);
 
-// Start Background Jobs
+// Start Background Jobs & Keep-Alive Service
 startCronJobs();
+startKeepAliveService();
 
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}).catch((err) => {
-    console.error("Failed to connect to DB", err);
-    process.exit(1);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    // Connect to MongoDB asynchronously without blocking server startup
+    connectDB();
 });

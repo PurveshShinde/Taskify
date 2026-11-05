@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /auth
+Disallow: /dashboard/
+
+Sitemap: https://taskify-webapp-pro.vercel.app/sitemap.xml
+

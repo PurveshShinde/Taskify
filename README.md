@@ -1,24 +1,13 @@
 <div align="center">
 
-  <h1>⚡ Taskify</h1>
-  <p><strong>Next-Generation Smart Task & Workflow Management Platform</strong></p>
+  <img src="./client/public/logo.png" alt="Taskify Logo" width="80" height="80" style="margin-bottom: 8px;" />
+  <h1>Taskify</h1>
+  <p><strong>Next-Generation Smart Task &amp; Workflow Management Platform</strong></p>
 
   <p>
-    <a href="https://taskify-webapp-pro.vercel.app" target="_blank">
-      <img src="https://img.shields.io/badge/Live%20Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
-    </a>
     <a href="./LICENSE">
-      <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License: MIT" />
+      <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License: MIT" />
     </a>
-    <a href="https://github.com/PurveshShinde/Taskify/stargazers">
-      <img src="https://img.shields.io/github/stars/PurveshShinde/Taskify?style=for-the-badge&color=gold" alt="GitHub Stars" />
-    </a>
-    <a href="https://github.com/PurveshShinde/Taskify/pulls">
-      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome" />
-    </a>
-  </p>
-
-  <p>
     <img src="https://img.shields.io/badge/React-18.2-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
     <img src="https://img.shields.io/badge/TypeScript-5.3-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-5.0-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
@@ -30,85 +19,84 @@
   </p>
 
   <p align="center">
-    <a href="https://taskify-webapp-pro.vercel.app"><strong>Explore Live Demo »</strong></a>
-    <br />
-    <br />
-    <a href="#-features">Key Features</a> •
-    <a href="#-visual-tour">Visual Tour</a> •
-    <a href="#-tech-stack">Tech Stack</a> •
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-api-endpoints">API Reference</a> •
-    <a href="#-contributing">Contributing</a>
+    <a href="#overview">Overview</a> •
+    <a href="#key-features">Key Features</a> •
+    <a href="#visual-tour">Visual Tour</a> •
+    <a href="#tech-stack">Tech Stack</a> •
+    <a href="#project-architecture">Project Architecture</a> •
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#api-reference">API Reference</a> •
+    <a href="#contributing">Contributing</a>
   </p>
 </div>
 
 ---
 
-## 📖 Overview
+## Overview
 
-**Taskify** is a modern, production-grade task and workflow management platform designed to help individuals and teams organize projects, boost productivity, and collaborate effortlessly. 
+**Taskify** is a modern, production-grade task and workflow management platform designed to help individuals and teams organize projects, boost productivity, and collaborate seamlessly.
 
-Built with the **MERN** stack and full **TypeScript** type-safety across client and server, Taskify features voice-activated task creation via the Web Speech API, an interactive AI project assistant, comprehensive status analytics, team collaboration workspaces, secure dual authentication (JWT + Firebase Google OAuth), and an instant **zero-setup Live Demo mode**.
+Built with the **MERN** stack and end-to-end **TypeScript** type-safety across client and server, Taskify features voice-activated task creation via the Web Speech API, an interactive AI project assistant, comprehensive status analytics, team collaboration workspaces, secure dual authentication (JWT + Firebase Google OAuth), and an integrated 8-minute keep-alive service for reliable cloud hosting.
 
 ---
 
-## 📸 Visual Tour
+## Key Features
+
+- **Voice & Speech-to-Text Task Creation**: Dictate tasks directly into Taskify using the browser's Web Speech API for hands-free workflow capture.
+- **Interactive AI Project Assistant**: Intelligent floating workspace companion that assists with organizing priorities, suggesting project breakdowns, and optimizing team productivity.
+- **Collaborative Team Workspaces**: Create dedicated team spaces, invite members, conduct in-app discussions, and track shared team tasks in real time.
+- **Visual Analytics & Status Metrics**: Real-time project completion tracking, todo distribution charts powered by Recharts, and multi-tier priority filtering (Low, Medium, High).
+- **Dual Authentication Architecture**:
+  - Email & password registration with cryptographic token verification powered by Nodemailer.
+  - One-click Google Sign-In with Firebase Authentication and server-side Firebase Admin ID token verification.
+- **Interactive Demo Mode**: Zero-setup evaluation environment allowing users to explore full capabilities without requiring database provisioning or account registration.
+- **Glassmorphic Interface & Adaptive Theming**: Dark/Light mode theme system, fluid micro-interactions with Framer Motion, and Tailwind CSS typography.
+- **Automated Background Jobs & Keep-Alive Service**: Node-Cron scheduled deadline notifications and an automated 8-minute keep-alive ping engine to prevent Render free-tier instances from spinning down.
+
+---
+
+## Visual Tour
 
 ### Landing & Workspace Command Center
 <p align="center">
   <img src="./assets/home.png" alt="Taskify Landing Page" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 </p>
 
-### Interactive Dashboard & Instant Demo Mode
-| 📊 Dashboard & AI Project Assistant | ⚡ Zero-Setup Interactive Demo Mode |
+### Interactive Dashboard & Demo Mode
+| Dashboard & AI Assistant | Interactive Demo Mode |
 | :---: | :---: |
 | <img src="./assets/dashboard.png" alt="Taskify Dashboard Overview" width="100%" style="border-radius: 6px;" /> | <img src="./assets/demo.png" alt="Taskify Demo Mode" width="100%" style="border-radius: 6px;" /> |
 
-### 👥 Collaborative Team Spaces & Live Discussions
+### Collaborative Team Workspaces
 <p align="center">
   <img src="./assets/teams.png" alt="Taskify Team Collaboration Space" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 </p>
-<p align="center"><em>Dedicated Team Workspaces featuring real-time discussion streams, member invitations, and shared team tasks.</em></p>
+<p align="center"><em>Dedicated team workspaces featuring real-time discussion streams, member invitations, and shared team tasks.</em></p>
 
-### 🔐 Seamless Authentication & Verification Demo
+### Authentication & Security Flow
 <p align="center">
   <img src="./assets/auth.gif" alt="Taskify Authentication Flow Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 </p>
-<p align="center"><em>Real-time registration, email verification token dispatch, and Google OAuth login flow.</em></p>
+<p align="center"><em>Account registration, verification dispatch, and Google OAuth login integration.</em></p>
 
 ---
 
-## ✨ Features
-
-- 🎙️ **Voice / Speech-to-Text Task Creation**: Dictate tasks directly into Taskify using the browser's Web Speech API for hands-free workflow capture.
-- 🤖 **Interactive AI Project Assistant**: Floating chat companion that assists with organizing priorities, suggesting project structures, and optimizing productivity.
-- 👥 **Collaborative Team Spaces**: Create dedicated team workspaces, invite members, conduct in-app discussions, and track shared team tasks in real time.
-- 📊 **Visual Analytics & Status Metrics**: Real-time project completion rates, todo distribution charts (powered by Recharts), and priority filters (Low, Medium, High).
-- 🔐 **Dual Secure Authentication**:
-  - Email & password with token verification powered by Nodemailer.
-  - One-click Google Sign-In with Firebase Authentication & server-side Firebase Admin ID token verification.
-- ⚡ **Instant Live Demo Mode**: One-click test drive without registering or configuring a database, with state managed via isolated browser session storage.
-- 🌓 **Sleek Glassmorphic UI & Theming**: Dark/Light mode support, fluid micro-interactions with Framer Motion, and Tailwind CSS.
-- ⏰ **Automated Background Jobs**: Node-Cron integration for scheduled notifications and task status maintenance.
-
----
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
-- **Framework**: [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Framework**: [React 18](https://react.dev/) with [Vite](https://vitejs.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Motion & Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Charts & Data Viz**: [Recharts](https://recharts.org/)
-- **Auth Provider**: [Firebase Client SDK](https://firebase.google.com/)
+- **Data Visualization**: [Recharts](https://recharts.org/)
+- **Auth Client**: [Firebase Client SDK](https://firebase.google.com/)
 - **Date Utilities**: [date-fns](https://date-fns.org/)
 
 ### Backend
-- **Runtime**: [Node.js](https://nodejs.org/) (>=24.22.1)
+- **Runtime**: [Node.js](https://nodejs.org/) (>=20 / >=24.22.1)
 - **Framework**: [Express.js](https://expressjs.com/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/) (`tsx` for dev)
+- **Language & Engine**: [TypeScript](https://www.typescriptlang.org/) with [`tsx`](https://github.com/privatenumber/tsx) execution
 - **Database**: [MongoDB](https://www.mongodb.com/) via [Mongoose ODM](https://mongoosejs.com/)
 - **Security & Tokens**: [JSON Web Tokens (JWT)](https://jwt.io/), [bcryptjs](https://www.npmjs.com/package/bcryptjs)
 - **Cloud Auth Verification**: [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
@@ -117,77 +105,88 @@ Built with the **MERN** stack and full **TypeScript** type-safety across client 
 
 ---
 
-## 📁 Repository Structure
+## Project Architecture
 
 ```text
 Taskify/
-├── assets/                  # High-res screenshots and media
+├── assets/                  # High-resolution screenshots and product media
 │   ├── home.png             # Landing page preview
 │   ├── dashboard.png        # Dashboard & AI assistant preview
 │   ├── demo.png             # Demo mode preview
 │   ├── teams.png            # Collaborative team space preview
-│   ├── auth.gif             # Animated auth demo
-│   └── auth.mp4             # High-res auth recording
+│   ├── auth.gif             # Animated authentication demo
+│   └── auth.mp4             # Video demo
 ├── client/                  # Frontend Single Page Application
-│   ├── public/              # Static assets & icons
+│   ├── public/              # Static assets, sitemap.xml, robots.txt, preview images
 │   ├── src/
-│   │   ├── components/      # UI components (Sidebar, ProjectAssistant, Layout)
+│   │   ├── components/      # UI components (Sidebar, ProjectAssistant, Modals)
 │   │   ├── config/          # Firebase client initialization
-│   │   ├── context/         # AuthContext & ThemeContext
+│   │   ├── context/         # AuthContext & ThemeContext providers
 │   │   ├── hooks/           # useSpeechToText hook
 │   │   ├── layouts/         # DashboardLayout
-│   │   ├── pages/           # LandingPage, AuthPage, VerifyEmail, Dashboard
+│   │   ├── pages/           # LandingPage, AuthPage, Dashboard Views
 │   │   ├── services/        # API client & Demo mode mock engine
-│   │   └── types.ts         # Global TypeScript interfaces
+│   │   └── types.ts         # TypeScript models and interfaces
 │   ├── .env.example         # Client environment template
 │   └── package.json
 ├── server/                  # Backend REST API Server
 │   ├── config/              # MongoDB connection & Firebase Admin setup
 │   ├── controllers/         # Auth, Task, Project, Team, User controllers
-│   ├── middleware/          # JWT auth middleware
+│   ├── middleware/          # JWT authentication middleware
 │   ├── models/              # Mongoose schemas (User, Task, Project, Team)
 │   ├── routes/              # Express API route endpoints
-│   ├── services/            # Cron jobs & email service
+│   ├── services/            # Cron deadline service, email service, keep-alive service
 │   ├── .env.example         # Server environment template
-│   └── server.ts            # Application entrypoint
+│   └── server.ts            # Application entrypoint & health routes
 ├── package.json             # Root orchestration scripts
 └── README.md
 ```
 
 ---
 
-## 🚀 Quick Start
+## Getting Started
 
-### 1. Prerequisites
-Ensure you have the following installed on your machine:
-- [Node.js](https://nodejs.org/) (>=24.22.1)
-- [npm](https://www.npmjs.com/)
-- [MongoDB](https://www.mongodb.com/) (Local instance or free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster)
+### Prerequisites
+Make sure you have installed:
+- [Node.js](https://nodejs.org/) (version 20+ or 24.x recommended)
+- [npm](https://www.npmjs.com/) (version 10+)
+- [MongoDB](https://www.mongodb.com/) (local instance or free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster)
 
-### 2. Clone the Repository
+### Installation
+
+Clone the repository:
 ```bash
 git clone https://github.com/PurveshShinde/Taskify.git
 cd Taskify
 ```
 
-### 3. Install All Dependencies
-Install root, client, and server dependencies with a single command:
+Install dependencies across the root, client, and server packages:
 ```bash
 npm run install:all
 ```
 
-### 4. Configure Environment Variables
+> **Important Note on Server Dependencies**:  
+> If you run `npm run dev` inside `server/` and encounter the error:  
+> `'tsx' is not recognized as an internal or external command`  
+> this indicates that dependencies have not yet been installed inside `server/`. Run:
+> ```bash
+> cd server && npm install
+> ```
 
-#### Client Configuration
-Create `.env` inside the `client/` directory:
+---
+
+### Environment Setup
+
+#### 1. Client Environment (`client/.env`)
+Copy the sample environment file:
 ```bash
 cp client/.env.example client/.env
 ```
-Edit `client/.env`:
+Ensure your `client/.env` contains:
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 
-# Optional: Add Firebase credentials for Google Sign-In
+# Optional: Firebase credentials for Google Sign-In
 VITE_FIREBASE_API_KEY=your_firebase_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_project_id
@@ -196,52 +195,70 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 ```
 
-#### Server Configuration
-Create `.env` inside the `server/` directory:
+#### 2. Server Environment (`server/.env`)
+Copy the sample environment file:
 ```bash
 cp server/.env.example server/.env
 ```
-Edit `server/.env`:
+Ensure your `server/.env` contains:
 ```env
 PORT=5000
 CLIENT_ORIGIN=http://localhost:5173
 FRONTEND_URL=http://localhost:5173
 MONGO_URI=mongodb://127.0.0.1:27017/taskify
-JWT_SECRET=your_super_secret_jwt_key
+JWT_SECRET=your_secure_jwt_secret_key
 
-# Optional: Firebase Admin (for Google Sign-In token verification)
+# Optional: Backend Keep-Alive (automatically detected on Render via RENDER_EXTERNAL_URL)
+SERVER_URL=https://taskify-api.example.com
+
+# Optional: Firebase Admin credentials (for Google Sign-In verification)
 FIREBASE_PROJECT_ID=your_project_id
 FIREBASE_CLIENT_EMAIL=your_service_account@project.iam.gserviceaccount.com
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 
-# Optional: Email Service (defaults to console logging if omitted)
+# Optional: Email Service (defaults to console logging in development)
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_app_password
 ```
 
-### 5. Run the Application
-Start both the frontend and backend concurrently:
+---
+
+### Running the Application
+
+#### Option 1: Unified Startup (Recommended)
+From the project root:
 ```bash
 npm run dev
 ```
+This concurrently boots both the frontend client and backend server.
 
-Alternatively, run each service independently:
+#### Option 2: Dual Terminal Startup
+For focused debugging, run each layer in a separate terminal:
+
+**Terminal 1 — Backend API Server:**
 ```bash
-# Terminal 1: Run frontend (http://localhost:5173)
-npm run dev:client
-
-# Terminal 2: Run backend (http://localhost:5000)
-npm run dev:server
+cd server
+npm install
+npm run dev
 ```
+*Backend runs at [http://localhost:5000](http://localhost:5000) (Health check: [http://localhost:5000/health](http://localhost:5000/health))*
 
-Open [http://localhost:5173](http://localhost:5173) in your browser to experience Taskify!
+**Terminal 2 — Frontend Client:**
+```bash
+cd client
+npm install
+npm run dev
+```
+*Frontend runs at [http://localhost:5173](http://localhost:5173)*
 
 ---
 
-## 📡 API Endpoints
+## API Reference
 
 | Method | Endpoint | Description | Access |
 | :--- | :--- | :--- | :--- |
+| `GET` | `/health` | System health status & keep-alive monitor | Public |
+| `GET` | `/` | API status heartbeat | Public |
 | `POST` | `/api/auth/register` | Register new user & dispatch verification email | Public |
 | `POST` | `/api/auth/login` | Login with email and password | Public |
 | `POST` | `/api/auth/firebase` | Authenticate with Firebase ID token (Google Sign-In) | Public |
@@ -259,40 +276,37 @@ Open [http://localhost:5173](http://localhost:5173) in your browser to experienc
 
 ---
 
-## 🔒 Security Best Practices
+## Security & Reliability
 
-- **Password Hashing**: Passwords salted and hashed with `bcryptjs`.
-- **JWT Authorization**: Bearer tokens protecting private endpoints.
-- **Environment Isolation**: No production keys or connection strings are tracked or hardcoded in source.
-- **CORS Protection**: Restricted to authorized origins in production.
-- **Email Verification**: Required verification flow before standard accounts can authenticate.
+- **Password Hashing**: Cryptographic password salting and hashing using `bcryptjs`.
+- **JWT Authorization**: Secure HTTP Bearer tokens protecting private routes.
+- **Environment Isolation**: Production credentials and database secrets are never hardcoded or committed to git.
+- **CORS Protection**: Origin validation restricting unauthorized cross-origin requests.
+- **Cloud Keep-Alive Engine**: Automated 8-minute ping cycle preventing cloud platforms (such as Render) from cycling instances into sleep mode.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are what make the open-source community an amazing place to learn, inspire, and create! Any contributions you make are **greatly appreciated**.
+Contributions are welcome. If you would like to propose a change:
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'feat: Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+2. Create your Feature Branch (`git checkout -b feature/NewFeature`)
+3. Commit your Changes (`git commit -m 'feat: Add NewFeature'`)
+4. Push to the Branch (`git push origin feature/NewFeature`)
 5. Open a Pull Request
 
 ---
 
-## 📄 License
+## License
 
-Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for more information.
+Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for more details.
 
 ---
 
-## 👨‍💻 Author & Support
+## Author & Support
 
 **Purvesh Shinde**  
-- GitHub: [@PurveshShinde](https://github.com/PurveshShinde)
-- Project Repository: [https://github.com/PurveshShinde/Taskify](https://github.com/PurveshShinde/Taskify)
-- Live Web App: [https://taskify-webapp-pro.vercel.app](https://taskify-webapp-pro.vercel.app)
-
-If you find Taskify helpful or inspiring, please give it a ⭐️ on GitHub and consider supporting:  
-☕ **[Buy Me a Coffee](https://buymeacoffee.com/purvesh.dev?message=From%20Taskify)**
+- GitHub: [@PurveshShinde](https://github.com/PurveshShinde)  
+- Project Repository: [https://github.com/PurveshShinde/Taskify](https://github.com/PurveshShinde/Taskify)  
+- Support the Project: **[Buy Me a Coffee](https://buymeacoffee.com/purvesh.dev?message=From%20Taskify)**
