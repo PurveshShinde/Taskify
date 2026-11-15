@@ -294,7 +294,7 @@ Contributions are welcome. If you would like to propose a change:
 2. Create your Feature Branch (`git checkout -b feature/NewFeature`)
 3. Commit your Changes (`git commit -m 'feat: Add NewFeature'`)
 4. Push to the Branch (`git push origin feature/NewFeature`)
-5. Open a Pull Request
+5. Open a Pull Request.
 
 ---
 
