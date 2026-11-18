@@ -97,7 +97,6 @@ Open `server/.env` and configure the following parameters:
 | `FRONTEND_URL` | Yes | `http://localhost:5173` | Base client URL used when constructing email verification links. |
 | `MONGO_URI` | Yes | `mongodb://127.0.0.1:27017/taskify` | Connection string for MongoDB database instance. |
 | `JWT_SECRET` | Yes | `your_secret_key` | Secret key used to sign and verify JSON Web Tokens. |
-| `SERVER_URL` | Optional | `https://taskify-api.example.com` | Public server URL used by the 8-minute keep-alive ping engine. |
 | `FIREBASE_PROJECT_ID` | Optional | `project-id` | Firebase project ID for Firebase Admin SDK. |
 | `FIREBASE_CLIENT_EMAIL`| Optional | `firebase-adminsdk@...` | Service account email for Firebase Admin SDK. |
 | `FIREBASE_PRIVATE_KEY` | Optional | `"-----BEGIN PRIVATE KEY-----\n..."` | Service account private key string (enclosed in double quotes with literal `\n`). |

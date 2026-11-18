@@ -34,7 +34,7 @@
 
 Taskify is a modern, production-grade task and workflow management platform designed to help individuals and teams organize projects, boost productivity, and collaborate seamlessly.
 
-Built with the MERN stack and end-to-end TypeScript type-safety across client and server, Taskify features voice-activated task creation via the Web Speech API, an interactive AI project assistant, comprehensive status analytics, collaborative team workspaces, secure dual authentication (JWT + Firebase Google OAuth), and an integrated keep-alive service for reliable cloud hosting.
+Built with the MERN stack and end-to-end TypeScript type-safety across client and server, Taskify features voice-activated task creation via the Web Speech API, an interactive AI project assistant, comprehensive status analytics, collaborative team workspaces, and secure dual authentication (JWT + Firebase Google OAuth).
 
 ---
 
@@ -49,7 +49,7 @@ Built with the MERN stack and end-to-end TypeScript type-safety across client an
   - One-click Google Sign-In with Firebase Authentication and server-side Firebase Admin ID token verification.
 - **Interactive Demo Mode**: Zero-setup evaluation environment allowing users to explore full platform capabilities without requiring database provisioning or account registration.
 - **Refined Light Aesthetic and Bento Grid UI**: Clean, distraction-free workspace featuring modular Bento cards, subtle border contrasts, fluid micro-interactions with Framer Motion, and Tailwind CSS typography.
-- **Automated Background Jobs and Keep-Alive Engine**: Node-Cron scheduled deadline notifications and an automated 8-minute keep-alive ping engine to prevent cloud hosting instances from idling.
+- **Automated Background Jobs**: Node-Cron scheduled deadline notifications and task alert dispatching.
 
 ---
 

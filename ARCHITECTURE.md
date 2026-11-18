@@ -16,7 +16,6 @@ flowchart TD
     Firebase["Firebase Auth Service (Google OAuth)"]
     SMTP["Nodemailer (SMTP Relay / Console Fallback)"]
     Cron["Node-Cron (Deadline Worker)"]
-    PingEngine["Keep-Alive Engine (8-Minute Ping)"]
 
     Client -->|"HTTP / REST API (JWT Bearer)"| API
     Client -->|"Google Sign-In Token Exchange"| Firebase
@@ -24,7 +23,6 @@ flowchart TD
     API -->|"CRUD Operations & Indexing"| DB
     API -->|"Transactional Emails"| SMTP
     API -->|"Background Task Scheduling"| Cron
-    API -->|"Automated Host Wakeup"| PingEngine
 ```
 
 ---
@@ -33,7 +31,7 @@ flowchart TD
 
 - **End-to-End Type Safety**: Shared TypeScript paradigms and domain definitions across both frontend and backend ensure reliable API contracts and strict runtime guarantees.
 - **Decoupled Client and Server**: The client is fully isolated as an independent Single Page Application, communicating with the server exclusively via JSON over REST.
-- **Fail-Safe Resilience**: Core services, such as email dispatch and keep-alive monitoring, degrade gracefully without crashing the main application loop.
+- **Fail-Safe Resilience**: Core services, such as email dispatch and background tasks, degrade gracefully without crashing the main application loop.
 - **Demo-First Capability**: A client-side mock service engine allows full evaluation of the application interface without requiring an active database or network connection.
 - **Modular Component Hierarchy**: Strict separation between page views, reusable presentation components, context state providers, and external API services.
 
@@ -104,7 +102,7 @@ The server adheres to a layered controller-service pattern:
    - Establishes MongoDB database connection (`config/db.ts`).
    - Registers top-level health checks (`GET /`, `GET /health`).
    - Mounts API routers.
-   - Starts the cron deadline scheduler and keep-alive service.
+   - Starts the cron deadline scheduler.
 
 2. **Routes (`routes/`)**:
    - Maps URL endpoints to controller actions.
@@ -119,7 +117,6 @@ The server adheres to a layered controller-service pattern:
    - `authMiddleware.ts`: Extracts the `Bearer <token>` from the HTTP `Authorization` header, verifies the JWT against `JWT_SECRET`, resolves the user from the database, and injects `req.user`.
 
 5. **Services (`services/`)**:
-   - `keepAliveService.ts`: Periodically pings the server URL (every 8 minutes) to maintain warm instances on free-tier cloud hosts such as Render.
    - `cronService.ts`: Runs scheduled routines via `node-cron` to check upcoming task deadlines and trigger notifications.
    - `emailService.ts`: Sends transactional messages (e.g., account verification links) using SMTP, with graceful fallback to console output in development environments.
 
@@ -243,18 +240,12 @@ sequenceDiagram
 
 ## 7. Reliability and Background Services
 
-### 7.1 Keep-Alive Service
-- **File**: `server/services/keepAliveService.ts`
-- **Cadence**: Every 8 minutes (`8 * 60 * 1000 ms`).
-- **Purpose**: Prevents cloud hosting providers (such as Render) from putting inactive instances to sleep, preserving immediate API response times.
-- **Auto-Detection**: Automatically reads `RENDER_EXTERNAL_URL` if present, falling back to `SERVER_URL`.
-
-### 7.2 Scheduled Deadline Monitor
+### 7.1 Scheduled Deadline Monitor
 - **File**: `server/services/cronService.ts`
 - **Cadence**: Configured via cron expression (`node-cron`).
 - **Purpose**: Evaluates tasks approaching their `dueDate`, generates alerts in the `Notification` collection, and triggers notification emails.
 
-### 7.3 Transactional Email Service
+### 7.2 Transactional Email Service
 - **File**: `server/services/emailService.ts`
 - **Engine**: Nodemailer.
 - **Behavior**: Transmits account activation tokens. When credentials (`EMAIL_USER`, `EMAIL_PASS`) are unconfigured, the service logs verification links directly to the console so local development remains unblocked.

@@ -13,7 +13,6 @@ import teamRoutes from './routes/teamRoutes';
 import projectRoutes from './routes/projectRoutes';
 import userRoutes from './routes/userRoutes';
 import { startCronJobs } from './services/cronService';
-import { startKeepAliveService } from './services/keepAliveService';
 
 const app = express();
 
@@ -63,9 +62,8 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/users', userRoutes);
 
-// Start Background Jobs & Keep-Alive Service
+// Start Background Jobs
 startCronJobs();
-startKeepAliveService();
 
 const PORT = process.env.PORT || 5000;
 

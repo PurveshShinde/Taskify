@@ -122,7 +122,7 @@ To maintain code quality and architectural consistency, adhere to the following 
 - Structure backend logic following the controller-service pattern:
   - Routes (`server/routes/`): Define URL paths and link to controller methods.
   - Controllers (`server/controllers/`): Handle HTTP request validation, error responses, and status codes.
-  - Services (`server/services/`): Handle standalone operations (e.g., email dispatch, background cron tasks, keep-alive monitoring).
+  - Services (`server/services/`): Handle standalone operations (e.g., email dispatch, background cron tasks).
   - Middleware (`server/middleware/`): Authentication, token verification, and request validation.
 - Protect private endpoints using the `authMiddleware` JWT verification handler.
 - Always return standardized JSON error envelopes: `{ message: string }`.
